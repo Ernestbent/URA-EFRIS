@@ -23,7 +23,7 @@ def log_integration_request(status, url, headers, data, response, error=""):
             "url": url,
             "request_headers": json.dumps(headers, indent=4),
             "data": json.dumps(data, indent=4),
-            "output": json.dumps(response, indent=4),
+            "output": json.dumps(response,indent=4),
             "error": error,
             "execution_time": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         })

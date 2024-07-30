@@ -108,21 +108,29 @@ def send_fixed_data_to_external_system():
                 print("Decompressed Data:", decompressed_data)
                 json_data = json.loads(decompressed_data)
                 print("Decompressed JSON:", json.dumps(json_data, indent=4))
-                
-                # Get existing UOMs in ERPNext
-                existing_uoms = [doc.uom_name for doc in frappe.get_all("UOM", fields=["uom_name"])]
-                
-                # Insert new documents for each item in the rateUnit field if not already existing
+
+                # Process UOM data
                 for rate in json_data.get("rateUnit", []):
-                    if rate.get("name") not in existing_uoms:
-                        doc = frappe.new_doc("UOM")
-                        doc.uom_name = rate.get("name", "")  # Assign rate name to document field 'uom_name'
-                        doc.custom_value = rate.get("value", "")  # Assign rate value to document field 'custom_value'
-                        doc.insert()
-                        print(f"Document inserted for UOM: {rate.get('name', '')}")
+                    uom_name = rate.get("name", "")
+                    uom_value = rate.get("value", "")
+
+                    # Check if the UOM already exists
+                    existing_uom = frappe.get_all("UOM", filters={"uom_name": uom_name}, limit=1)
+                    
+                    if existing_uom:
+                        # Update existing UOM
+                        uom_doc = frappe.get_doc("UOM", uom_name)
+                        uom_doc.custom_value = uom_value
+                        uom_doc.save()
+                        print(f"Updated UOM: {uom_name}")
                     else:
-                        print(f"UOM already exists: {rate.get('name', '')}")
-                
+                        # Insert new UOM
+                        uom_doc = frappe.new_doc("UOM")
+                        uom_doc.uom_name = uom_name
+                        uom_doc.custom_value = uom_value
+                        uom_doc.insert()
+                        print(f"Inserted UOM: {uom_name}")
+
                 # Log the successful integration request
                 log_integration_request('Completed', url, headers, data, response_json, decompressed_data)
 
@@ -156,8 +164,8 @@ def log_integration_request(status, url, headers, data, response, error=""):
         "status": status,
         "url": url,
         "request_headers": json.dumps(headers, indent=4),
-        "data": json.dumps(data,indent=4),
-        "output": json.dumps(response,indent=4),
+        "data": json.dumps(data, indent=4),
+        "output": json.dumps(response, indent=4),
         "execution_time": now()
     })
     integration_request.insert(ignore_permissions=True)  # This line inserts the integration request into ERPNext
