@@ -127,7 +127,7 @@ def query_tax_payer(doc, event):
         # Log the successful integration request
         log_integration_request('Completed', server_url, headers, data, response_data)
         
-        frappe.msgprint("Sent successfully")
+        frappe.msgprint("Retrieved  successfully")
        
     except requests.exceptions.RequestException as e:
         # Log the failed integration request
