@@ -19,7 +19,7 @@ def log_integration_request(status, url, headers, data, response, error=""):
         "doctype": "Integration Request",
         "integration_type": "Remote",
         "method": "POST",
-        "integration_request_service": "Efris",
+        "integration_request_service": "Query Invoice Details",
         "is_remote_request": True,
         "status": status,
         "url": url,
