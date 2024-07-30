@@ -1,38 +1,42 @@
-import json
-import base64
-from datetime import datetime
 import frappe
 import requests
+import json
+import base64
+from datetime import datetime, timezone, timedelta
 
-def get_current_datetime():
-    now = datetime.now()
-    formatted_datetime = now.strftime("%Y-%m-%d %H:%M:%S")
-    return formatted_datetime
+# Define the East Africa Time (EAT) timezone, which is UTC+3
+eat_timezone = timezone(timedelta(hours=3))
+
+def get_current_datetime_combined():
+    now = datetime.now(eat_timezone)  # Get current time in EAT timezone
+    date_str = now.strftime("%Y-%m-%d")
+    time_str = now.strftime("%H:%M:%S")
+    return date_str + " " + time_str
 
 def log_integration_request(status, url, headers, data, response, error=""):
     valid_statuses = ["", "Queued", "Authorized", "Completed", "Cancelled", "Failed"]
-    if status not in valid_statuses:
-        status = "Failed"  # Default to "Failed" if status is invalid
-
+    status = status if status in valid_statuses else "Failed"
+    
     integration_request = frappe.get_doc({
         "doctype": "Integration Request",
         "integration_type": "Remote",
+        "method": "POST",
         "integration_request_service": "Cancellation Of Credit Note",
         "is_remote_request": True,
-        "method": "POST",
         "status": status,
         "url": url,
         "request_headers": json.dumps(headers, indent=4),
         "data": json.dumps(data, indent=4),
         "output": json.dumps(response, indent=4),
         "error": error,
-        "execution_time": get_current_datetime()
+        "execution_time": datetime.now(eat_timezone).strftime("%Y-%m-%d %H:%M:%S")
     })
     integration_request.insert(ignore_permissions=True)
     frappe.db.commit()
 
 def on_cancel(doc, event):
     if not doc.is_return:  # Replace with the actual field to check if it's a return
+        frappe.msgprint("Document is not marked as a return; no request will be made.")
         return
 
     # Fetch the current session company
@@ -45,16 +49,15 @@ def on_cancel(doc, event):
     if not efris_settings_list:
         frappe.throw(f"No Efris Settings found for the company {company}")
 
-    # Get the Efris Settings document
+    # Get the document name (fetch the correct one based on the company)
     efris_settings_doc_name = efris_settings_list[0].name
     efris_settings_doc = frappe.get_doc("Efris Settings", efris_settings_doc_name)
 
-    # Extract settings
     device_number = efris_settings_doc.custom_device_number
     tin = efris_settings_doc.custom_tax_payers_tin
     server_url = efris_settings_doc.custom_server_url
 
-    # Prepare the cancellation data
+    # Sample cancellation_data dictionary
     cancellation_data = {
         "oriInvoiceId": doc.custom_invoice_number,  # Replace with actual invoice ID
         "invoiceNo": doc.custom_fdn,     # Replace with actual invoice number
@@ -73,7 +76,9 @@ def on_cancel(doc, event):
     # Encode the cancellation_data to JSON and then to Base64
     cancellation_data_json = json.dumps(cancellation_data, indent=4)
     encoded_json_cancellation = base64.b64encode(cancellation_data_json.encode()).decode()
-
+    
+    current_time = datetime.now(eat_timezone).strftime("%Y-%m-%d %H:%M:%S")
+    # Prepare the API request data
     data_to_post = {
         "data": {
             "content": encoded_json_cancellation,  # Base64 encoded JSON string
@@ -90,7 +95,7 @@ def on_cancel(doc, event):
             "dataExchangeId": "9230489223014123",
             "interfaceCode": "T114",  # Assuming T114 for cancellation
             "requestCode": "TP",
-            "requestTime": get_current_datetime(),  # Use the combined datetime string
+            "requestTime": current_time,  # Use the combined datetime string
             "responseCode": "TA",
             "userName": "admin",
             "deviceMAC": "B47720524158",
@@ -111,31 +116,33 @@ def on_cancel(doc, event):
         "returnStateInfo": {"returnCode": "", "returnMessage": ""},
     }
 
-    # Convert data_to_post to JSON string with pretty print
+    # Convert data_to_post to JSON string if needed
     data_to_post_json = json.dumps(data_to_post, indent=4)
 
     # Print the JSON request data (for debugging purposes)
     print("API Request Data:")
     print(data_to_post_json)
 
-    # Make the POST request
+    # Prepare the API request
     api_url = server_url
     headers = {"Content-Type": "application/json"}
 
     try:
+        # Make the POST request
         response = requests.post(api_url, json=data_to_post, headers=headers)
         response.raise_for_status()
 
+        # Parse the JSON response content
         response_data = response.json()
         json_response = json.dumps(response_data, indent=4)
-
-        # Assuming `doc` is your Frappe document
-        doc.custom_response = json_response
+        
         return_message = response_data["returnStateInfo"]["returnMessage"]
 
         # Handle the response status code
         if response.status_code == 200 and return_message == "SUCCESS":
-            frappe.msgprint("Credit Note Cancelled Successfully.")
+            frappe.msgprint("Credit Note Cancelled successfully.")
+
+            # Print the response status code and content
             print(f"Response Status Code: {response.status_code}")
             print(f"Response Content: {response.text}")
 
@@ -152,10 +159,11 @@ def on_cancel(doc, event):
         else:
             # Log the failed integration request
             log_integration_request('Failed', api_url, headers, data_to_post, response_data, return_message)
+            frappe.throw(title="Oops! API Error", msg=return_message)
 
     except requests.exceptions.RequestException as e:
         # Log the failed integration request
-        log_integration_request('Failed', api_url, headers, data_to_post, {}, f"Request failed: {e}")
+        log_integration_request('Failed', api_url, headers, data_to_post, {}, str(e))
         frappe.throw(f"Request failed: {e}")
 
     except json.JSONDecodeError as e:
