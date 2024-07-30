@@ -1,19 +1,11 @@
 import json
 import base64
-from datetime import datetime
+from datetime import datetime, timedelta, timezone
 import frappe
 import requests
 
-from datetime import datetime, timedelta, timezone
-
 # Define the East Africa Time (EAT) timezone, which is UTC+3
 eat_timezone = timezone(timedelta(hours=3))
-
-# Get the current time in EAT
-current_time = datetime.now(eat_timezone).strftime("%Y-%m-%d %H:%M:%S")
-
-print("Current time in Uganda (EAT):", current_time)
-
 
 def log_integration_request(status, url, headers, data, response, error=""):
     valid_statuses = ["", "Queued", "Authorized", "Completed", "Cancelled", "Failed"]
@@ -23,8 +15,8 @@ def log_integration_request(status, url, headers, data, response, error=""):
     integration_request = frappe.get_doc({
         "doctype": "Integration Request",
         "integration_type": "Remote",
-        "integration_request_service":"Query TaxPayer Information By TIN NIN",
-        "is_remote_request":True,
+        "integration_request_service": "Query TaxPayer Information By TIN NIN",
+        "is_remote_request": True,
         "method": "POST",
         "status": status,
         "url": url,
@@ -32,13 +24,12 @@ def log_integration_request(status, url, headers, data, response, error=""):
         "data": json.dumps(data),
         "output": json.dumps(response),
         "error": error,
-        "execution_time": datetime.now()
+        "execution_time": datetime.now(eat_timezone).strftime("%Y-%m-%d %H:%M:%S")
     })
-    integration_request.insert(ignore_permissions=True)  # This line inserts the integration request into ERPNext
+    integration_request.insert(ignore_permissions=True)
     frappe.db.commit()
 
 def query_tax_payer(doc, event):
-    
     # Fetch the current session company
     company = frappe.defaults.get_user_default("company")
     if not company:
@@ -49,7 +40,6 @@ def query_tax_payer(doc, event):
     if not efris_settings_list:
         frappe.throw(f"No Efris Settings found for the company {company}")
 
-    # Get the document name (fetch the correct one based on the company)
     efris_settings_doc_name = efris_settings_list[0].name
     efris_settings_doc = frappe.get_doc("Efris Settings", efris_settings_doc_name)
     
@@ -57,14 +47,17 @@ def query_tax_payer(doc, event):
     tin = efris_settings_doc.custom_tax_payers_tin
     server_url = efris_settings_doc.custom_server_url
 
+    # Get the current time in EAT
+    current_time = datetime.now(eat_timezone).strftime("%Y-%m-%d %H:%M:%S")
+    
     data_to_post = {
         "ninBrn": "",
         "tin": doc.tin
     }
-    # Convert the dictionary to a JSON-formatted string
+    
     json_string = json.dumps(data_to_post)
-    # Encode the JSON string to base64
     encoded_data = base64.b64encode(json_string.encode("utf-8")).decode("utf-8")
+    
     data = {
         "data": {
             "content": encoded_data,
@@ -104,13 +97,11 @@ def query_tax_payer(doc, event):
             "returnMessage": ""
         },
     }
-    
-    # Make API post request
-    api_url = server_url
+
     headers = {'Content-Type': "application/json"}
     
     try:
-        response = requests.post(api_url, json=data, headers=headers)
+        response = requests.post(server_url, json=data, headers=headers)
         response.raise_for_status()
         
         response_data = response.json()
@@ -123,13 +114,11 @@ def query_tax_payer(doc, event):
         doc.save()
 
         # Log the successful integration request
-        log_integration_request('Completed', api_url, headers, data, response_data)
+        log_integration_request('Completed', server_url, headers, data, response_data)
         
-        # Print or show the decoded content
-        print(decoded_content)
         frappe.msgprint("Sent successfully")
        
     except requests.exceptions.RequestException as e:
         # Log the failed integration request
-        log_integration_request('Failed', api_url, headers, data, {}, str(e))
+        log_integration_request('Failed', server_url, headers, data, {}, str(e))
         frappe.throw(f"API request failed: {e}")

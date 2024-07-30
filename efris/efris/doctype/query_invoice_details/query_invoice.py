@@ -1,20 +1,11 @@
 import json
 import base64
-from datetime import datetime
+from datetime import datetime, timedelta, timezone
 import frappe
 import requests
-from frappe.model.document import Document
-
-from datetime import datetime, timedelta, timezone
 
 # Define the East Africa Time (EAT) timezone, which is UTC+3
 eat_timezone = timezone(timedelta(hours=3))
-
-# Get the current time in EAT
-current_time = datetime.now(eat_timezone).strftime("%Y-%m-%d %H:%M:%S")
-
-print("Current time in Uganda (EAT):", current_time)
-
 
 def log_integration_request(status, url, headers, data, response, error=""):
     valid_statuses = ["", "Queued", "Authorized", "Completed", "Cancelled", "Failed"]
@@ -24,21 +15,20 @@ def log_integration_request(status, url, headers, data, response, error=""):
         "doctype": "Integration Request",
         "integration_type": "Remote",
         "method": "POST",
-        "integration_request_service":"Efris",
-         "is_remote_request":True,
+        "integration_request_service": "Query Invoice Information",
+        "is_remote_request": True,
         "status": status,
         "url": url,
         "request_headers": json.dumps(headers),
         "data": json.dumps(data),
         "output": json.dumps(response),
         "error": error,
-        "execution_time": datetime.now()
+        "execution_time": datetime.now(eat_timezone).strftime("%Y-%m-%d %H:%M:%S")
     })
     integration_request.insert(ignore_permissions=True)
     frappe.db.commit()
 
 def query_invoice_information(doc, event):
-    
     # Fetch the current session company
     company = frappe.defaults.get_user_default("company")
     if not company:
@@ -49,7 +39,6 @@ def query_invoice_information(doc, event):
     if not efris_settings_list:
         frappe.throw(f"No Efris Settings found for the company {company}")
 
-    # Get the document name (fetch the correct one based on the company)
     efris_settings_doc_name = efris_settings_list[0].name
     efris_settings_doc = frappe.get_doc("Efris Settings", efris_settings_doc_name)
     
@@ -63,10 +52,14 @@ def query_invoice_information(doc, event):
     mobile_phone = efris_settings_doc.custom_mobile_phone
     line_phone = efris_settings_doc.custom_line_phone
     address = efris_settings_doc.custom_address
+
+    # Get the current time in EAT
+    current_time = datetime.now(eat_timezone).strftime("%Y-%m-%d %H:%M:%S")
     
     data_to_post = {
         "invoiceNo": doc.invoice_number,
     }
+    
     # Convert the dictionary to a JSON-formatted string
     json_string = json.dumps(data_to_post)
     # Encode the JSON string to base64
@@ -111,7 +104,7 @@ def query_invoice_information(doc, event):
         },
     }
     
-    # Make API post request
+    # Make API POST request
     api_url = server_url
     headers = {'Content-Type': "application/json"}
     
@@ -123,6 +116,9 @@ def query_invoice_information(doc, event):
         encoded_content = response_data["data"]["content"]
         decoded_content = base64.b64decode(encoded_content).decode("utf-8")
         doc.invoice_information = decoded_content
+
+        # Save the document to persist the changes
+        doc.save()
 
         # Log the successful integration request
         log_integration_request('Completed', api_url, headers, data, response_data)

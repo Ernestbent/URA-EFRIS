@@ -5,13 +5,9 @@ from datetime import datetime, timedelta, timezone
 import json
 import gzip
 import base64
+
 # Define the East Africa Time (EAT) timezone, which is UTC+3
 eat_timezone = timezone(timedelta(hours=3))
-
-# Get the current time in EAT
-current_time = datetime.now(eat_timezone).strftime("%Y-%m-%d %H:%M:%S")
-
-print("Current time in Uganda (EAT):", current_time)
 
 def decompress_gzip(data):
     try:
@@ -24,11 +20,12 @@ def decompress_gzip(data):
 @frappe.whitelist()
 def send_fixed_data_to_external_system():
     def get_current_datetime():
-        now = datetime.now()
+        now = datetime.now(eat_timezone)
         formatted_datetime = now.strftime("%Y-%m-%d %H:%M:%S")
         return formatted_datetime
 
-    current_datetime = get_current_datetime()
+    # Get the current time in EAT dynamically
+    current_time = get_current_datetime()
 
     # Fetch the current session company
     company = frappe.defaults.get_user_default("company")
@@ -153,8 +150,8 @@ def log_integration_request(status, url, headers, data, response, error=""):
     integration_request = frappe.get_doc({
         "doctype": "Integration Request",
         "integration_type": "Remote",
-         "is_remote_request":True,
-        "integration_request_service":"Efris",
+        "is_remote_request": True,
+        "integration_request_service": "Efris",
         "method": "POST",
         "status": status,
         "url": url,

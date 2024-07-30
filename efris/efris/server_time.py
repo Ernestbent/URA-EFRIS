@@ -8,10 +8,6 @@ from datetime import datetime, timedelta, timezone
 # Define the East Africa Time (EAT) timezone, which is UTC+3
 eat_timezone = timezone(timedelta(hours=3))
 
-# Get the current time in EAT
-current_time = datetime.now(eat_timezone).strftime("%Y-%m-%d %H:%M:%S")
-
-print("Current time in Uganda (EAT):", current_time)
 @frappe.whitelist()
 def get_server_time():
     def get_current_datetime():
@@ -60,7 +56,8 @@ def get_server_time():
             "dataExchangeId": "1",
             "interfaceCode": "T101",
             "requestCode": "TP",
-            "requestTime": current_time,
+            # Generate the current time in EAT timezone dynamically
+            "requestTime": datetime.now(eat_timezone).strftime("%Y-%m-%d %H:%M:%S"),
             "responseCode": "TA",
             "userName": "admin",
             "deviceMAC": "B47720524158",
@@ -133,8 +130,8 @@ def log_integration_request(status, url, headers, data, response, error=""):
         integration_request = frappe.get_doc({
             "doctype": "Integration Request",
             "integration_type": "Remote",
-            "is_remote_request":True,
-            "integration_request_service":"System Dictionary ",
+            "is_remote_request": True,
+            "integration_request_service": "System Dictionary ",
             "method": "POST",
             "status": status,
             "url": url,

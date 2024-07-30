@@ -2,17 +2,10 @@ import base64
 import json
 import frappe
 import requests
-from datetime import datetime
 from datetime import datetime, timedelta, timezone
 
 # Define the East Africa Time (EAT) timezone, which is UTC+3
 eat_timezone = timezone(timedelta(hours=3))
-
-# Get the current time in EAT
-current_time = datetime.now(eat_timezone).strftime("%Y-%m-%d %H:%M:%S")
-
-print("Current time in Uganda (EAT):", current_time)
-
 
 def log_integration_request(status, url, headers, data, response, error=""):
     valid_statuses = ["", "Queued", "Authorized", "Completed", "Cancelled", "Failed"]
@@ -23,8 +16,8 @@ def log_integration_request(status, url, headers, data, response, error=""):
         integration_request = frappe.get_doc({
             "doctype": "Integration Request",
             "integration_type": "Remote",
-            "is_remote_request":True,
-            "integration_request_service":"System Dictionary Update",
+            "is_remote_request": True,
+            "integration_request_service": "System Dictionary Update",
             "method": "POST",
             "status": status,
             "url": url,
@@ -57,8 +50,6 @@ def log_error(method, error_message, traceback=None):
 @frappe.whitelist()
 def get_exchange_rates():
     frappe.logger().info("get_exchange_rates method called")
-    
-
 
     company = frappe.defaults.get_user_default("company")
     if not company:
@@ -79,6 +70,9 @@ def get_exchange_rates():
     headers = {
         'Content-Type': 'application/json',
     }
+
+    # Get the current time in EAT dynamically
+    current_time = datetime.now(eat_timezone).strftime("%Y-%m-%d %H:%M:%S")
 
     data = {
         "data": {
