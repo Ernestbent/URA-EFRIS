@@ -1,0 +1,167 @@
+import json
+import base64
+from datetime import datetime
+import frappe
+import requests
+
+def get_current_datetime():
+    now = datetime.now()
+    formatted_datetime = now.strftime("%Y-%m-%d %H:%M:%S")
+    return formatted_datetime
+
+def log_integration_request(status, url, headers, data, response, error=""):
+    valid_statuses = ["", "Queued", "Authorized", "Completed", "Cancelled", "Failed"]
+    if status not in valid_statuses:
+        status = "Failed"  # Default to "Failed" if status is invalid
+
+    integration_request = frappe.get_doc({
+        "doctype": "Integration Request",
+        "integration_type": "Remote",
+        "integration_request_service": "Cancellation Of Credit Note",
+        "is_remote_request": True,
+        "method": "POST",
+        "status": status,
+        "url": url,
+        "request_headers": json.dumps(headers),
+        "data": json.dumps(data),
+        "output": json.dumps(response),
+        "error": error,
+        "execution_time": datetime.now()
+    })
+    integration_request.insert(ignore_permissions=True)
+    frappe.db.commit()
+
+def on_cancel(doc, event):
+    if not doc.is_return:  # Replace with the actual field to check if it's a return
+        return
+
+    # Fetch the current session company
+    company = frappe.defaults.get_user_default("company")
+    if not company:
+        frappe.throw("No default company set for the current session")
+
+    # Fetch the Efris Settings document for the current company
+    efris_settings_list = frappe.get_all("Efris Settings", filters={"custom_company": company}, limit=1)
+    if not efris_settings_list:
+        frappe.throw(f"No Efris Settings found for the company {company}")
+
+    # Get the document name (fetch the correct one based on the company)
+    efris_settings_doc_name = efris_settings_list[0].name
+    efris_settings_doc = frappe.get_doc("Efris Settings", efris_settings_doc_name)
+
+    device_number = efris_settings_doc.custom_device_number
+    tin = efris_settings_doc.custom_tax_payers_tin
+    server_url = efris_settings_doc.custom_server_url
+
+    cancellation_data = {
+        "oriInvoiceId": doc.custom_invoice_number,  # Replace with actual invoice ID
+        "invoiceNo": doc.custom_fdn,     # Replace with actual invoice number
+        "reason": "",  # Provide the reason if applicable
+        "reasonCode": "102",
+        "invoiceApplyCategoryCode": "104",
+        "attachmentList": [
+            {
+                "fileName": "",  # Provide the file name if applicable
+                "fileType": "",  # Provide the file type if applicable
+                "fileContent": ""  # Base64 encoded file content if applicable
+            }
+        ]
+    }
+
+    # Encode the cancellation_data to JSON and then to Base64
+    cancellation_data_json = json.dumps(cancellation_data)
+    encoded_json_cancellation = base64.b64encode(cancellation_data_json.encode()).decode()
+
+    data_to_post = {
+        "data": {
+            "content": encoded_json_cancellation,  # Base64 encoded JSON string
+            "signature": "",
+            "dataDescription": {
+                "codeType": "0",
+                "encryptCode": "1",
+                "zipCode": "0",
+            },
+        },
+        "globalInfo": {
+            "appId": "AP04",
+            "version": "1.1.20191201",
+            "dataExchangeId": "9230489223014123",
+            "interfaceCode": "T114",  # Assuming T114 for cancellation
+            "requestCode": "TP",
+            "requestTime": get_current_datetime(),  # Use the combined datetime string
+            "responseCode": "TA",
+            "userName": "admin",
+            "deviceMAC": "B47720524158",
+            "deviceNo": device_number,
+            "tin": tin,
+            "brn": "",
+            "taxpayerID": "1",
+            "longitude": "32.61665",
+            "latitude": "0.36601",
+            "agentType": "0",
+            "extendField": {
+                "responseDateFormat": "dd/MM/yyyy",
+                "responseTimeFormat": "dd/MM/yyyy HH:mm:ss",
+                "referenceNo": "24PL01000221",
+                "operatorName": "administrator",
+            },
+        },
+        "returnStateInfo": {"returnCode": "", "returnMessage": ""},
+    }
+
+    # Convert data_to_post to JSON string if needed
+    data_to_post_json = json.dumps(data_to_post, indent=4)
+
+    # Print the JSON request data (for debugging purposes)
+    print("API Request Data:")
+    print(data_to_post_json)
+
+    # Make the POST request
+    api_url = server_url
+    headers = {"Content-Type": "application/json"}
+
+    try:
+        response = requests.post(api_url, json=data_to_post, headers=headers)
+        response.raise_for_status()
+
+        response_data = response.json()
+        json_response = json.dumps(response_data, indent=4)
+
+        # Assuming `doc` is your Frappe document
+        doc.custom_response = json_response
+        return_message = response_data["returnStateInfo"]["returnMessage"]
+
+        # Handle the response status code
+        if response.status_code == 200 and return_message == "SUCCESS":
+            frappe.msgprint("Credit Note Cancelled Successfully.")
+            print(f"Response Status Code: {response.status_code}")
+            print(f"Response Content: {response.text}")
+
+            # Extract and decode the 'content' string
+            encoded_content = response_data["data"]["content"]
+            decoded_content = base64.b64decode(encoded_content).decode("utf-8")
+
+            print("Decoded Content:")
+            print(decoded_content)
+
+            # Log the successful integration request
+            log_integration_request('Completed', api_url, headers, data_to_post, response_data)
+
+        else:
+            # Log the failed integration request
+            log_integration_request('Failed', api_url, headers, data_to_post, response_data, return_message)
+
+    except requests.exceptions.RequestException as e:
+        # Log the failed integration request
+        log_integration_request('Failed', api_url, headers, data_to_post, {}, str(e))
+        frappe.throw(f"Request failed: {e}")
+
+    except json.JSONDecodeError as e:
+        # Handle JSON decoding errors
+        log_integration_request('Failed', api_url, headers, data_to_post, {}, f"JSON decode error: {e}")
+        frappe.throw(f"JSON decode error: {e}")
+
+    except base64.binascii.Error as e:
+        # Handle base64 decoding errors
+        log_integration_request('Failed', api_url, headers, data_to_post, {}, f"Base64 decode error: {e}")
+        frappe.throw(f"Base64 decode error: {e}")

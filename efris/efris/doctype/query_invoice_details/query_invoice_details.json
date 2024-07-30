@@ -1,0 +1,55 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2024-06-24 13:49:09.658542",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "efris_details_section",
+  "invoice_number",
+  "invoice_information"
+ ],
+ "fields": [
+  {
+   "fieldname": "efris_details_section",
+   "fieldtype": "Section Break",
+   "label": "EFRIS Details"
+  },
+  {
+   "description": "Enter Invoice No. or Invoice Id associated to the EFRIS Invoice generated",
+   "fieldname": "invoice_number",
+   "fieldtype": "Data",
+   "label": "Invoice Number"
+  },
+  {
+   "fieldname": "invoice_information",
+   "fieldtype": "Text",
+   "label": "Invoice Information",
+   "read_only": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2024-06-24 13:52:00.329021",
+ "modified_by": "Administrator",
+ "module": "Efris",
+ "name": "Query Invoice Details",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

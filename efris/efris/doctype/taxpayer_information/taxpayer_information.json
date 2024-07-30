@@ -1,0 +1,88 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "field:tin",
+ "creation": "2024-06-12 12:05:51.445736",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "section_break_ogs0",
+  "tin",
+  "column_break_xubc",
+  "nin",
+  "efris_details_section",
+  "information",
+  "amended_from"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_ogs0",
+   "fieldtype": "Section Break",
+   "label": "Details"
+  },
+  {
+   "fieldname": "column_break_xubc",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "tin",
+   "fieldtype": "Data",
+   "label": "TIN",
+   "unique": 1
+  },
+  {
+   "fieldname": "nin",
+   "fieldtype": "Data",
+   "label": "NIN/BRN"
+  },
+  {
+   "fieldname": "efris_details_section",
+   "fieldtype": "Section Break",
+   "label": "EFRIS Details"
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "information",
+   "fieldtype": "Small Text",
+   "label": "Information",
+   "read_only": 1
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "TaxPayer Information",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2024-06-12 13:41:07.956429",
+ "modified_by": "Administrator",
+ "module": "Efris",
+ "name": "TaxPayer Information",
+ "naming_rule": "By fieldname",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

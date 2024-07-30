@@ -1,0 +1,233 @@
+{
+ "charts": [],
+ "content": "[{\"id\":\"_ViMAo1dnz\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">EFRIS <br></span>\",\"col\":12}},{\"id\":\"iUHoLtfru2\",\"type\":\"card\",\"data\":{\"card_name\":\"Setup and Configurations\",\"col\":3}},{\"id\":\"tTRAG3B0SU\",\"type\":\"quick_list\",\"data\":{\"quick_list_name\":\"Integration Request\",\"col\":4}},{\"id\":\"1uY87_jMsv\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Total Server Requests\",\"col\":3}},{\"id\":\"ztWBQHtUHi\",\"type\":\"card\",\"data\":{\"card_name\":\"Item Information\",\"col\":5}},{\"id\":\"-at7wmUI0D\",\"type\":\"card\",\"data\":{\"card_name\":\"Purchase Information\",\"col\":5}},{\"id\":\"Fk-q_YjSuS\",\"type\":\"card\",\"data\":{\"card_name\":\"Sales Information\",\"col\":5}},{\"id\":\"PQ407SyLis\",\"type\":\"card\",\"data\":{\"card_name\":\"Stock Movement Information\",\"col\":5}},{\"id\":\"v2rkXKss69\",\"type\":\"card\",\"data\":{\"card_name\":\"Logs and Troubleshooting\",\"col\":5}},{\"id\":\"wo1jxAQ3IQ\",\"type\":\"card\",\"data\":{\"card_name\":\"Tax Payer Search\",\"col\":4}},{\"id\":\"XVhqiz-ClQ\",\"type\":\"card\",\"data\":{\"card_name\":\"Other Interface Codes\",\"col\":4}}]",
+ "creation": "2024-06-05 08:28:03.576432",
+ "custom_blocks": [],
+ "docstatus": 0,
+ "doctype": "Workspace",
+ "for_user": "",
+ "hide_custom": 0,
+ "icon": "solid-success",
+ "idx": 0,
+ "indicator_color": "",
+ "is_hidden": 0,
+ "label": "EFRIS",
+ "links": [
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Purchase Information",
+   "link_count": 1,
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "EFRIS Registered Purchases",
+   "link_count": 0,
+   "link_to": "Purchase Invoice",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Sales Information",
+   "link_count": 1,
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "EFRIS Registered Sales",
+   "link_count": 0,
+   "link_to": "Sales Invoice",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Stock Movement Information",
+   "link_count": 1,
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "EFRIS Registered Stock Movement",
+   "link_count": 0,
+   "link_to": "Stock Entry",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Tax Payer Search",
+   "link_count": 1,
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Tax Payer Details",
+   "link_count": 0,
+   "link_to": "TaxPayer Information",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Item Information",
+   "link_count": 4,
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Item Tax Template",
+   "link_count": 0,
+   "link_to": "Item Tax Template",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "EFRS Item",
+   "link_count": 0,
+   "link_to": "Item",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "BOM",
+   "link_count": 0,
+   "link_to": "BOM",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "EFRIS Registered UOMs",
+   "link_count": 0,
+   "link_to": "UOM",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Other Interface Codes",
+   "link_count": 1,
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Query Invoice Details",
+   "link_count": 0,
+   "link_to": "Query Invoice Details",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Logs and Troubleshooting",
+   "link_count": 2,
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Error Logs",
+   "link_count": 0,
+   "link_to": "Error Log",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 1,
+   "label": "Integration Request",
+   "link_count": 0,
+   "link_to": "Integration Request",
+   "link_type": "DocType",
+   "onboard": 1,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Setup and Configurations",
+   "link_count": 1,
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "EFRIS Settings",
+   "link_count": 0,
+   "link_to": "Efris Settings",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  }
+ ],
+ "modified": "2024-07-26 18:40:25.315388",
+ "modified_by": "Administrator",
+ "module": "Efris",
+ "name": "EFRIS",
+ "number_cards": [
+  {
+   "label": "Total Server Requests",
+   "number_card_name": "Requests"
+  }
+ ],
+ "owner": "Administrator",
+ "parent_page": "",
+ "public": 1,
+ "quick_lists": [
+  {
+   "document_type": "Integration Request",
+   "label": "Integration Request",
+   "quick_list_filter": "[]"
+  }
+ ],
+ "roles": [],
+ "sequence_id": 1.0,
+ "shortcuts": [],
+ "title": "EFRIS"
+}
