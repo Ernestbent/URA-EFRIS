@@ -131,7 +131,7 @@ def log_integration_request(status, url, headers, data, response, error=""):
             "doctype": "Integration Request",
             "integration_type": "Remote",
             "is_remote_request": True,
-            "integration_request_service": "System Dictionary ",
+            "integration_request_service": "Ping Server",
             "method": "POST",
             "status": status,
             "url": url,
