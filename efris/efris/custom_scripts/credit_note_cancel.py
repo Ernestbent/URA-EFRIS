@@ -22,11 +22,11 @@ def log_integration_request(status, url, headers, data, response, error=""):
         "method": "POST",
         "status": status,
         "url": url,
-        "request_headers": json.dumps(headers),
-        "data": json.dumps(data),
-        "output": json.dumps(response),
+        "request_headers": json.dumps(headers, indent=4),
+        "data": json.dumps(data, indent=4),
+        "output": json.dumps(response, indent=4),
         "error": error,
-        "execution_time": datetime.now()
+        "execution_time": get_current_datetime()
     })
     integration_request.insert(ignore_permissions=True)
     frappe.db.commit()
@@ -45,14 +45,16 @@ def on_cancel(doc, event):
     if not efris_settings_list:
         frappe.throw(f"No Efris Settings found for the company {company}")
 
-    # Get the document name (fetch the correct one based on the company)
+    # Get the Efris Settings document
     efris_settings_doc_name = efris_settings_list[0].name
     efris_settings_doc = frappe.get_doc("Efris Settings", efris_settings_doc_name)
 
+    # Extract settings
     device_number = efris_settings_doc.custom_device_number
     tin = efris_settings_doc.custom_tax_payers_tin
     server_url = efris_settings_doc.custom_server_url
 
+    # Prepare the cancellation data
     cancellation_data = {
         "oriInvoiceId": doc.custom_invoice_number,  # Replace with actual invoice ID
         "invoiceNo": doc.custom_fdn,     # Replace with actual invoice number
@@ -69,7 +71,7 @@ def on_cancel(doc, event):
     }
 
     # Encode the cancellation_data to JSON and then to Base64
-    cancellation_data_json = json.dumps(cancellation_data)
+    cancellation_data_json = json.dumps(cancellation_data, indent=4)
     encoded_json_cancellation = base64.b64encode(cancellation_data_json.encode()).decode()
 
     data_to_post = {
@@ -109,7 +111,7 @@ def on_cancel(doc, event):
         "returnStateInfo": {"returnCode": "", "returnMessage": ""},
     }
 
-    # Convert data_to_post to JSON string if needed
+    # Convert data_to_post to JSON string with pretty print
     data_to_post_json = json.dumps(data_to_post, indent=4)
 
     # Print the JSON request data (for debugging purposes)
@@ -153,7 +155,7 @@ def on_cancel(doc, event):
 
     except requests.exceptions.RequestException as e:
         # Log the failed integration request
-        log_integration_request('Failed', api_url, headers, data_to_post, {}, str(e))
+        log_integration_request('Failed', api_url, headers, data_to_post, {}, f"Request failed: {e}")
         frappe.throw(f"Request failed: {e}")
 
     except json.JSONDecodeError as e:

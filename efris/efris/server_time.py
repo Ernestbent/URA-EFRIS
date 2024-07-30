@@ -135,9 +135,9 @@ def log_integration_request(status, url, headers, data, response, error=""):
             "method": "POST",
             "status": status,
             "url": url,
-            "request_headers": json.dumps(headers),
-            "data": json.dumps(data),
-            "output": json.dumps(response),
+            "request_headers": json.dumps(headers, indent=4),
+            "data": json.dumps(data, indent=4),
+            "output": json.dumps(response, indent=4),
             "error": error,  # Set error field based on provided error message
             "execution_time": now()
         })

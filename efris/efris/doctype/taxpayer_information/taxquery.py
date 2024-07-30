@@ -12,6 +12,10 @@ def log_integration_request(status, url, headers, data, response, error=""):
     if status not in valid_statuses:
         status = "Failed"  # Default to "Failed" if status is invalid
 
+    # Format data and response as pretty-printed JSON
+    formatted_data = json.dumps(data, indent=4)
+    formatted_response = json.dumps(response, indent=4)
+
     integration_request = frappe.get_doc({
         "doctype": "Integration Request",
         "integration_type": "Remote",
@@ -20,9 +24,9 @@ def log_integration_request(status, url, headers, data, response, error=""):
         "method": "POST",
         "status": status,
         "url": url,
-        "request_headers": json.dumps(headers),
-        "data": json.dumps(data),
-        "output": json.dumps(response),
+        "request_headers": json.dumps(headers, indent=4),
+        "data": formatted_data,
+        "output": formatted_response,
         "error": error,
         "execution_time": datetime.now(eat_timezone).strftime("%Y-%m-%d %H:%M:%S")
     })
