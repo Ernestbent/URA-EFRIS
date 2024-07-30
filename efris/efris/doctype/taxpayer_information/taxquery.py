@@ -112,7 +112,14 @@ def query_tax_payer(doc, event):
         encoded_content = response_data["data"]["content"]
 
         decoded_content = base64.b64decode(encoded_content).decode("utf-8")
-        doc.information = decoded_content
+       # Convert the JSON string to a Python dictionary
+        content_dict = json.loads(decoded_content)
+
+        # Format the JSON with indent 4 spaces
+        formatted_content = json.dumps(content_dict, indent=4)
+
+        # Assign the formatted JSON to the doc's field
+        doc.information = formatted_content
          
         # Save the document to persist the changes
         doc.save()

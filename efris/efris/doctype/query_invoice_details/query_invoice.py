@@ -115,8 +115,11 @@ def query_invoice_information(doc, event):
         response_data = response.json()
         encoded_content = response_data["data"]["content"]
         decoded_content = base64.b64decode(encoded_content).decode("utf-8")
-        doc.invoice_information = decoded_content
+        # Format the JSON content with indent 4
+        formatted_content = json.dumps(json.loads(decoded_content), indent=4)
 
+        # Assign the formatted content to the doc's field
+        doc.invoice_information = formatted_content
         # Log the successful integration request
         log_integration_request('Completed', server_url, headers, data, response_data)
         
