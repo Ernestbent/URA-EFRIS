@@ -1,6 +1,6 @@
 {
  "aggregate_function_based_on": "",
- "creation": "2024-07-26 18:25:09.739624",
+ "creation": "2024-07-30 21:13:48.249324",
  "docstatus": 0,
  "doctype": "Number Card",
  "document_type": "Integration Request",
@@ -11,7 +11,7 @@
  "is_public": 0,
  "is_standard": 1,
  "label": "Requests  ",
- "modified": "2024-07-26 18:25:09.739624",
+ "modified": "2024-07-30 21:13:48.249324",
  "modified_by": "Administrator",
  "module": "Efris",
  "name": "Requests",
