@@ -36,7 +36,7 @@ def log_integration_request(status, url, headers, data, response, error=""):
 
 def on_cancel(doc, event):
     if not doc.is_return:  # Replace with the actual field to check if it's a return
-        # frappe.msgprint("Document is not marked as a return; no request will be made.")
+        
         return
 
     # Fetch the current session company
