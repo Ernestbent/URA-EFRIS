@@ -1,6 +1,6 @@
 {
  "charts": [],
- "content": "[{\"id\":\"_ViMAo1dnz\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">EFRIS <br></span>\",\"col\":12}},{\"id\":\"iUHoLtfru2\",\"type\":\"card\",\"data\":{\"card_name\":\"Setup and Configurations\",\"col\":3}},{\"id\":\"tTRAG3B0SU\",\"type\":\"quick_list\",\"data\":{\"quick_list_name\":\"Integration Request\",\"col\":4}},{\"id\":\"1uY87_jMsv\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Total Server Requests\",\"col\":3}},{\"id\":\"ztWBQHtUHi\",\"type\":\"card\",\"data\":{\"card_name\":\"Item Information\",\"col\":5}},{\"id\":\"-at7wmUI0D\",\"type\":\"card\",\"data\":{\"card_name\":\"Purchase Information\",\"col\":5}},{\"id\":\"Fk-q_YjSuS\",\"type\":\"card\",\"data\":{\"card_name\":\"Sales Information\",\"col\":5}},{\"id\":\"PQ407SyLis\",\"type\":\"card\",\"data\":{\"card_name\":\"Stock Movement Information\",\"col\":5}},{\"id\":\"v2rkXKss69\",\"type\":\"card\",\"data\":{\"card_name\":\"Logs and Troubleshooting\",\"col\":5}},{\"id\":\"wo1jxAQ3IQ\",\"type\":\"card\",\"data\":{\"card_name\":\"Tax Payer Search\",\"col\":4}},{\"id\":\"XVhqiz-ClQ\",\"type\":\"card\",\"data\":{\"card_name\":\"Other Interface Codes\",\"col\":4}}]",
+ "content": "[{\"id\":\"_ViMAo1dnz\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">EFRIS <br></span>\",\"col\":12}},{\"id\":\"iUHoLtfru2\",\"type\":\"card\",\"data\":{\"card_name\":\"Setup and Configurations\",\"col\":3}},{\"id\":\"tTRAG3B0SU\",\"type\":\"quick_list\",\"data\":{\"quick_list_name\":\"Integration Request\",\"col\":4}},{\"id\":\"1uY87_jMsv\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Total Server Requests\",\"col\":3}},{\"id\":\"en_hoglVy_\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"TOTAL SERVER REQUESTS\",\"col\":4}},{\"id\":\"ztWBQHtUHi\",\"type\":\"card\",\"data\":{\"card_name\":\"Item Information\",\"col\":5}},{\"id\":\"-at7wmUI0D\",\"type\":\"card\",\"data\":{\"card_name\":\"Purchase Information\",\"col\":5}},{\"id\":\"Fk-q_YjSuS\",\"type\":\"card\",\"data\":{\"card_name\":\"Sales Information\",\"col\":5}},{\"id\":\"PQ407SyLis\",\"type\":\"card\",\"data\":{\"card_name\":\"Stock Movement Information\",\"col\":5}},{\"id\":\"v2rkXKss69\",\"type\":\"card\",\"data\":{\"card_name\":\"Logs and Troubleshooting\",\"col\":5}},{\"id\":\"wo1jxAQ3IQ\",\"type\":\"card\",\"data\":{\"card_name\":\"Tax Payer Search\",\"col\":4}},{\"id\":\"XVhqiz-ClQ\",\"type\":\"card\",\"data\":{\"card_name\":\"Other Interface Codes\",\"col\":4}}]",
  "creation": "2024-06-05 08:28:03.576432",
  "custom_blocks": [],
  "docstatus": 0,
@@ -206,13 +206,17 @@
    "type": "Link"
   }
  ],
- "modified": "2024-07-26 18:40:25.315388",
+ "modified": "2024-07-30 21:50:42.938173",
  "modified_by": "Administrator",
  "module": "Efris",
  "name": "EFRIS",
  "number_cards": [
   {
    "label": "Total Server Requests",
+   "number_card_name": "Requests"
+  },
+  {
+   "label": "TOTAL SERVER REQUESTS",
    "number_card_name": "Requests"
   }
  ],
