@@ -109,27 +109,38 @@ def query_tax_payer(doc, event):
         response.raise_for_status()
         
         response_data = response.json()
-        encoded_content = response_data["data"]["content"]
-
-        decoded_content = base64.b64decode(encoded_content).decode("utf-8")
-       # Convert the JSON string to a Python dictionary
-        content_dict = json.loads(decoded_content)
-
-        # Format the JSON with indent 4 spaces
-        formatted_content = json.dumps(content_dict, indent=4)
-
-        # Assign the formatted JSON to the doc's field
-        doc.information = formatted_content
-         
-        # Save the document to persist the changes
-        doc.save()
-
-        # Log the successful integration request
-        log_integration_request('Completed', server_url, headers, data, response_data)
+        # Parse the JSON response content.
+        response_data = json.loads(response.text)
+        return_message = response_data["returnStateInfo"]["returnMessage"]
         
-        frappe.msgprint("Information Retrieved  successfully")
        
+       
+        if response.status_code == 200 and return_message == "SUCCESS":
+            frappe.msgprint("Information Retrieved  successfully")
+            encoded_content = response_data["data"]["content"]
+
+            decoded_content = base64.b64decode(encoded_content).decode("utf-8")
+        # Convert the JSON string to a Python dictionary
+            content_dict = json.loads(decoded_content)
+
+            # Format the JSON with indent 4 spaces
+            formatted_content = json.dumps(content_dict, indent=4)
+
+            # Assign the formatted JSON to the doc's field
+            doc.information = formatted_content
+            log_integration_request('Completed', server_url, headers, data, response_data)
+            # Save the document to persist the changes
+            doc.save()
+             # Log the successful integration request
+        else:
+            frappe.throw(
+                title="Oops",
+                msg=return_message
+            )
+  
     except requests.exceptions.RequestException as e:
         # Log the failed integration request
         log_integration_request('Failed', server_url, headers, data, {}, str(e))
         frappe.throw(f"API request failed: {e}")
+        doc.docstatus = 0
+        doc.save()

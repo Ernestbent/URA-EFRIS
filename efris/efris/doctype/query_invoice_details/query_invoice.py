@@ -113,22 +113,31 @@ def query_invoice_information(doc, event):
         response.raise_for_status()
         
         response_data = response.json()
-        encoded_content = response_data["data"]["content"]
-        decoded_content = base64.b64decode(encoded_content).decode("utf-8")
-        # Format the JSON content with indent 4
-        formatted_content = json.dumps(json.loads(decoded_content), indent=4)
-
-        # Assign the formatted content to the doc's field
-        doc.invoice_information = formatted_content
-        # Log the successful integration request
-        log_integration_request('Completed', server_url, headers, data, response_data)
+         # Parse the JSON response content.
+        response_data = json.loads(response.text)
+        return_message = response_data["returnStateInfo"]["returnMessage"]
+        
         
         # Handle the response status code
-        if response.status_code == 200:
+        if response.status_code == 200 and return_message == "SUCCESS":
+            encoded_content = response_data["data"]["content"]
+            decoded_content = base64.b64decode(encoded_content).decode("utf-8")
+            # Format the JSON content with indent 4
+            formatted_content = json.dumps(json.loads(decoded_content), indent=4)
+
+            # Assign the formatted content to the doc's field
+            doc.invoice_information = formatted_content
+            # Log the successful integration request
+            log_integration_request('Completed', server_url, headers, data, response_data)
             frappe.msgprint("Invoice Details Retrieved successfully")
         else:
-            frappe.throw("Efris API Error")
+            frappe.throw(
+                title="Oops",
+                msg=return_message
+            )
     except requests.exceptions.RequestException as e:
         # Log the failed integration request
         log_integration_request('Failed', server_url, headers, data, {}, str(e))
         frappe.throw(f"API request failed: {e}")
+        doc.docstatus = 0
+        doc.save()
