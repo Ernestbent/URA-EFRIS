@@ -1,0 +1,107 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "field:commodity_name",
+ "creation": "2024-09-04 12:48:16.055108",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "segment_code",
+  "segment_name",
+  "family_code",
+  "family_name",
+  "column_break_edwf",
+  "class_code",
+  "class_name",
+  "section_break_laiu",
+  "commodity_code",
+  "commodity_name",
+  "column_break_vqts",
+  "is_it_a_service"
+ ],
+ "fields": [
+  {
+   "fieldname": "segment_code",
+   "fieldtype": "Data",
+   "label": "Segment Code"
+  },
+  {
+   "fieldname": "segment_name",
+   "fieldtype": "Data",
+   "label": "Segment Name"
+  },
+  {
+   "fieldname": "family_code",
+   "fieldtype": "Data",
+   "label": "Family Code"
+  },
+  {
+   "fieldname": "family_name",
+   "fieldtype": "Data",
+   "label": "Family Name"
+  },
+  {
+   "fieldname": "column_break_edwf",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "class_code",
+   "fieldtype": "Data",
+   "label": "Class Code"
+  },
+  {
+   "fieldname": "class_name",
+   "fieldtype": "Data",
+   "label": "Class Name"
+  },
+  {
+   "fieldname": "section_break_laiu",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "commodity_code",
+   "fieldtype": "Data",
+   "label": "Commodity Code"
+  },
+  {
+   "fieldname": "commodity_name",
+   "fieldtype": "Data",
+   "label": "Commodity Name",
+   "unique": 1
+  },
+  {
+   "fieldname": "column_break_vqts",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "is_it_a_service",
+   "fieldtype": "Data",
+   "label": "Is It a Service?"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2024-09-04 12:52:17.811762",
+ "modified_by": "Administrator",
+ "module": "Efris",
+ "name": "Goods Details",
+ "naming_rule": "By fieldname",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
