@@ -74,8 +74,7 @@ doctype_js = {
 # Installation
 # ------------
 
-# before_install = "efris.install.before_install"
-# after_install = "efris.install.after_install"
+after_install = "efris.migrations.alter_goods_details.alter_goods_details_schema"
 
 # Uninstallation
 # ------------
