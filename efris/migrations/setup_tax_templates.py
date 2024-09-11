@@ -1,52 +1,55 @@
 import frappe
 
-def create_tax_types():
-    tax_types = [
-        {"name": "Standard", "tax_type": "Standard", "tax_rate": 0.18},
-        {"name": "Zero", "tax_type": "Zero", "tax_rate": 0.00},
-        {"name": "Exempt", "tax_type": "Exempt", "tax_rate": None},
-        {"name": "Deemed", "tax_type": "Deemed", "tax_rate": 0.18}
-    ]
-
-    for tax in tax_types:
-        if not frappe.db.exists("Tax", {"name": tax["name"]}):
-            tax_doc = frappe.get_doc({
-                "doctype": "Tax",
-                "title": tax["name"],
-                "tax_type": tax["tax_type"],
-                "tax_rate": tax["tax_rate"]
-            })
-            tax_doc.insert(ignore_if_duplicate=True)
-            
-def create_item_tax_templates_and_accounts():
-    create_tax_types()  # Ensure tax types exist before creating tax templates
-    
-    # Define your tax templates and companies
+def create_and_update_item_tax_templates():
+    # Define the generic tax templates
     tax_templates = [
-        {"title": "Standard", "tax_type": "Standard", "tax_rate": 0.18},
-        {"title": "Zero", "tax_type": "Zero", "tax_rate": 0.00},
-        {"title": "Exempt", "tax_type": "Exempt", "tax_rate": None},
-        {"title": "Deemed", "tax_type": "Deemed", "tax_rate": 0.18}
+        {
+            'title': 'Standard Tax Template',
+            'taxes': [
+                {
+                    'tax_type': 'VAT',  # Base tax type
+                    'tax_rate': 0.16
+                }
+            ]
+        },
+        # Add more templates as needed
     ]
     
-    companies = frappe.get_all("Company", fields=["name"])
-    
+    # Fetch all companies
+    companies = frappe.get_all('Company', fields=['name', 'abbr'])
+
     for company in companies:
         for template in tax_templates:
-            item_tax_template = frappe.get_doc({
-                "doctype": "Item Tax Template",
-                "title": f"{template['title']} Tax Template",
-                "company": company["name"],
-                "disabled": 0,
-                "taxes": [
-                    {
-                        "tax_type": template["tax_type"],
-                        "tax_rate": template["tax_rate"]
-                    }
-                ]
-            })
-            item_tax_template.insert(ignore_if_duplicate=True)
+            # Check if the generic template already exists for this company
+            existing_templates = frappe.get_all('Item Tax Template', filters={'title': template['title'], 'company': company['name']})
+            
+            if not existing_templates:
+                # Create a new Item Tax Template
+                tax_template = frappe.get_doc({
+                    'doctype': 'Item Tax Template',
+                    'title': template['title'],
+                    'company': company['name'],
+                    'taxes': [
+                        {
+                            'tax_type': f"{template['taxes'][0]['tax_type']}-{company['abbr'].upper()}",
+                            'tax_rate': template['taxes'][0]['tax_rate']
+                        }
+                    ]
+                })
+                tax_template.insert()
+                frappe.db.commit()
+            else:
+                # Update existing template with company-specific tax type
+                for existing_template in existing_templates:
+                    tax_template = frappe.get_doc('Item Tax Template', existing_template['name'])
+                    tax_template.taxes = [
+                        {
+                            'tax_type': f"{template['taxes'][0]['tax_type']}-{company['abbr'].upper()}",
+                            'tax_rate': template['taxes'][0]['tax_rate']
+                        }
+                    ]
+                    tax_template.save()
+                    frappe.db.commit()
 
-# Call this function in your migration script
-def after_install():
-    create_item_tax_templates_and_accounts()
+# Call the function to create or update templates
+create_and_update_item_tax_templates()
