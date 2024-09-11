@@ -75,7 +75,12 @@ doctype_js = {
 # ------------
 
 after_install = "efris.migrations.alter_goods_details.alter_goods_details_schema"
-after_install = "efris.migrations.setup_tax_templates.create_item_tax_templates_and_accounts"
+after_install = [
+    "efris.migrations.setup_tax_templates.create_or_update_accounts",
+    "efris.migrations.setup_tax_templates.create_and_update_item_tax_templates"
+]
+# after_install ="efris.migrations.setup_tax_templates"
+# after_install = "efris.migrations.setup_tax_templates.create_item_tax_templates_and_accounts"
 
 # Uninstallation
 # ------------
