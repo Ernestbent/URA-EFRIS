@@ -66,7 +66,7 @@ doctype_js = {
 # ----------
 
 # add methods and filters to jinja environment
-# jinja = {
+# jinja = {                                                                                                                                 
 # 	"methods": "efris.utils.jinja_methods",
 # 	"filters": "efris.utils.jinja_filters"
 # }

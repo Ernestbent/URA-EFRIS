@@ -19,6 +19,11 @@ frappe.ui.form.on('Efris Settings', {
                 // Call the server-side method for getting exchange rates
                 get_exchange_rates();
             }, __("Actions"));
+            // Add custom button Query Excise Items.
+            frm.add_custom_button(__('Query Excise Duty'), function(){
+                // Call the Server-side method for getting excise duty
+                query_excise_duty();
+            }, __("Actions"));
         }
     }
 });
@@ -71,6 +76,23 @@ function get_exchange_rates() {
                 }
             } else {
                 frappe.msgprint(__('Failed to retrieve exchange rates'));
+            }
+        }
+    });
+}
+function query_excise_duty() {
+    // Call the server-side method for sending fixed data
+    frappe.call({
+        method: 'efris.efris.excise_duty.query_excise_duty_items',  // Adjust the path if necessary
+        callback: function(response) {
+            if (response.message) {
+                if (response.message.status === "success") {
+                    frappe.msgprint("Excise duty Goods/Services Fetched Successfully")
+                } else {
+                    frappe.msgprint(__('Failed to send data: ' + JSON.stringify(response.message.message)));
+                }
+            } else {
+                frappe.msgprint(__('Failed to send data'));
             }
         }
     });

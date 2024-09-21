@@ -142,14 +142,14 @@ def on_send(doc, event):
         items_data.append(item_data)
 
         # Check if 'exempt' is in the item_tax_template
-        if item.item_tax_template == "Exempt - MCL":
+        if item.item_tax_template.startswith("Exempt"):
             tax_rate = "-"
             tax_category_code = "03"
             tax = 0
             grossAmount = item.amount
             taxAmount = 0
             netAmount = item.amount
-        elif item.item_tax_template == "Zero - MCL":
+        elif item.item_tax_template.startswith("Zero"):
             tax_rate = 0
             tax_category_code = "02"
             tax = 0
