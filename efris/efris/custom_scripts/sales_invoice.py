@@ -196,40 +196,74 @@ def on_send(doc, event):
         print(f"Rate: {item.item_tax_template}")
 
         
-
         goods_detail = {
-        "item": item.item_name,
-        "itemCode": item.item_code,
-        "qty": item.qty,
-        "unitOfMeasure": item.custom_uom_codeefris,
-        "unitPrice": item.rate,
-        "total": item.amount,
-        "taxRate": tax_rate,
-        "tax": tax,
-        "discountTotal": item.discount_amount,
-        "discountTaxRate": item.discount_percentage,
-        "orderNumber": str(len(goods_details)),
-        "discountFlag": "1" if item.discount_amount else "2",  # Set to '1' if discountTotal exists
-        "deemedFlag": "2",
-        "exciseFlag": "2",
-        "categoryId": "",
-        "categoryName": "",
-        "goodsCategoryId": item.custom_goods_category_id,
-        "goodsCategoryName": "",
-        "exciseRate": "",
-        "exciseRule": "",
-        "exciseTax": "",
-        "pack": "",
-        "stick": "",
-        "exciseUnit": "",
-        "exciseCurrency": "",
-        "exciseRateName": "",
-        "vatApplicableFlag": "1",
-    }
-
+            "item": item.item_name,
+            "itemCode": item.item_code,
+            "qty": item.qty,
+            "unitOfMeasure": item.custom_uom_codeefris,
+            "unitPrice": item.rate,
+            "total": item.amount,
+            "taxRate": tax_rate,
+            "tax": tax,
+            "discountTotal": "" if item.discount_amount == 0 or item.discount_percentage == 0 else -(item.discount_amount),
+            "discountTaxRate": item.discount_percentage,
+            "orderNumber": str(len(goods_details)),
+            "discountFlag": "1" if item.discount_amount else "2",  # Set to '1' if discountTotal exists
+            "deemedFlag": "2",
+            "exciseFlag": "2",
+            "categoryId": "",
+            "categoryName": "",
+            "goodsCategoryId": item.custom_goods_category_id,
+            "goodsCategoryName": "",
+            "exciseRate": "",
+            "exciseRule": "",
+            "exciseTax": "",
+            "pack": "",
+            "stick": "",
+            "exciseUnit": "",
+            "exciseCurrency": "",
+            "exciseRateName": "",
+            "vatApplicableFlag": "1",
+        }
 
         goods_details.append(goods_detail)
 
+         # If discountFlag is "1", duplicate and modify
+        if goods_detail["discountFlag"] == "1":
+            # Create a duplicate of all fields
+            new_goods_detail = goods_detail.copy()
+            
+            # Modify specific fields in the duplicated entry\
+            new_goods_detail["item"] = goods_detail["item"] + " (Discount)"
+            new_goods_detail["qty"] =   ""
+            new_goods_detail["unitPrice"] = "" 
+            new_goods_detail["total"] = (goods_detail["discountTotal"])
+            new_goods_detail["tax"] = round(((18 / 118) * (goods_detail["discountTotal"])), 2)
+            new_goods_detail["orderNumber"] = str(len(goods_details))  # Increment order number for the duplicate
+            
+            # Keep the remaining fields the same
+            new_goods_detail["discountTotal"] = ""
+            new_goods_detail["discountTaxRate"] = ""
+            new_goods_detail["discountFlag"] = "0"
+            new_goods_detail["deemedFlag"] ="2"
+            new_goods_detail["exciseFlag"] = "2"
+            new_goods_detail["categoryId"] = ""
+            new_goods_detail["categoryName"] = ""
+            new_goods_detail["goodsCategoryId"] = goods_detail["goodsCategoryId"]
+            new_goods_detail["goodsCategoryName"] = ""
+            new_goods_detail["exciseRate"] = ""
+            new_goods_detail["exciseRule"] =""
+            new_goods_detail["exciseTax"] = ""
+            new_goods_detail["pack"] = ""
+            new_goods_detail["stick"] = ""
+            new_goods_detail["exciseUnit"] = ""
+            new_goods_detail["exciseCurrency"] = ""
+            new_goods_detail["exciseRateName"] = ""
+            new_goods_detail["vatApplicableFlag"] = "1"
+        
+            # Append the modified duplicate to the goods_details list
+            goods_details.append(new_goods_detail)
+        
         total_tax_amount = sum(
             tax_category["taxAmount"] for tax_category in tax_categories_list
         )
