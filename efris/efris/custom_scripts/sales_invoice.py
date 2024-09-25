@@ -137,6 +137,8 @@ def on_send(doc, event):
             "description": item.description,
             "goods_category_id":item.custom_goods_category_id,
             "item_tax_template":item.item_tax_template,
+            "discount_amount":item.discount_amount,
+            "discount_percentage":item.discount_percentage
         }
         # Append the item_data dictionary to the items_data list
         items_data.append(item_data)
@@ -196,36 +198,35 @@ def on_send(doc, event):
         
 
         goods_detail = {
-            "item": item.item_name,
-            "itemCode": item.item_code,
-            "qty": item.qty,
-            "unitOfMeasure": item.custom_uom_codeefris,
-            "unitPrice": item.rate,
-            "total": item.amount,
-            "taxRate": tax_rate,
-            "tax": tax,
-            "discountTotal": "",
-            "discountTaxRate": "",
-            "orderNumber": str(
-                len(goods_details)
-            ),  # Use the length of goods_details as the orderNumber
-            "discountFlag": "2",
-            "deemedFlag": "2",
-            "exciseFlag": "2",
-            "categoryId": "",
-            "categoryName": "",
-            "goodsCategoryId": item.custom_goods_category_id,
-            "goodsCategoryName": "",
-            "exciseRate": "",
-            "exciseRule": "",
-            "exciseTax": "",
-            "pack": "",
-            "stick": "",
-            "exciseUnit": "",
-            "exciseCurrency": "",
-            "exciseRateName": "",
-            "vatApplicableFlag": "1",
-        }
+        "item": item.item_name,
+        "itemCode": item.item_code,
+        "qty": item.qty,
+        "unitOfMeasure": item.custom_uom_codeefris,
+        "unitPrice": item.rate,
+        "total": item.amount,
+        "taxRate": tax_rate,
+        "tax": tax,
+        "discountTotal": item.discount_amount,
+        "discountTaxRate": item.discount_percentage,
+        "orderNumber": str(len(goods_details)),
+        "discountFlag": "1" if item.discount_amount else "2",  # Set to '1' if discountTotal exists
+        "deemedFlag": "2",
+        "exciseFlag": "2",
+        "categoryId": "",
+        "categoryName": "",
+        "goodsCategoryId": item.custom_goods_category_id,
+        "goodsCategoryName": "",
+        "exciseRate": "",
+        "exciseRule": "",
+        "exciseTax": "",
+        "pack": "",
+        "stick": "",
+        "exciseUnit": "",
+        "exciseCurrency": "",
+        "exciseRateName": "",
+        "vatApplicableFlag": "1",
+    }
+
 
         goods_details.append(goods_detail)
 
