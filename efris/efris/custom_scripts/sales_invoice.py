@@ -151,6 +151,7 @@ def on_send(doc, event):
             grossAmount = item.amount
             taxAmount = 0
             netAmount = item.amount
+            
         elif item.item_tax_template.startswith("Zero"):
             tax_rate = 0
             tax_category_code = "02"
@@ -228,10 +229,12 @@ def on_send(doc, event):
             "vatApplicableFlag": "1",
         }
         
+                
         if goods_detail["discountFlag"] == "1":
             goods_detail["unitPrice"] = item.rate + item.discount_amount
-            goods_detail["total"] = item.amount + item.discount_amount
-            goods_detail["tax"] = round((float(item.rate) + float(item.discount_amount)) * (18 / 118), 2)
+            goods_detail["total"] = goods_detail["unitPrice"]*goods_detail["qty"]
+            goods_detail["tax"] = round(goods_detail["total"] * 18 / 118, 2)
+
 
 
         goods_details.append(goods_detail)
@@ -239,7 +242,7 @@ def on_send(doc, event):
         # If discountFlag is "1", duplicate and modify
         if goods_detail["discountFlag"] == "1":
             # Create a duplicate of all fields
-            new_goods_detail = goods_detail.copy()
+            new_goods_detail = goods_detail.copy() 
             
             # Modify specific fields in the duplicated entry
             new_goods_detail["item"] = goods_detail["item"] + " (Discount)"
@@ -463,6 +466,7 @@ def on_send(doc, event):
                 },
                 "returnStateInfo": {"returnCode": "", "returnMessage": ""},
             }
+            
             #print Json Data
             print(f"Request Data: {json.dumps(data_to_post, indent=4)}")
             ###assign request in sales invoice
@@ -652,6 +656,7 @@ def on_send(doc, event):
                 },
                 "returnStateInfo": {"returnCode": "", "returnMessage": ""},
             }
+
             print(f"Request data: {json.dumps(data_to_post2, indent=4)}")
             # Make a POST request to the external API.
             api_url = server_url # Replace with your actual endpoint
