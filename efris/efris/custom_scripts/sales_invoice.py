@@ -151,7 +151,7 @@ def on_send(doc, event):
             grossAmount = item.amount
             taxAmount = 0
             netAmount = item.amount
-            
+
         elif item.item_tax_template.startswith("Zero"):
             tax_rate = 0
             tax_category_code = "02"
@@ -234,6 +234,7 @@ def on_send(doc, event):
             goods_detail["unitPrice"] = item.rate + item.discount_amount
             goods_detail["total"] = goods_detail["unitPrice"]*goods_detail["qty"]
             goods_detail["tax"] = round(goods_detail["total"] * 18 / 118, 2)
+            goods_detail["discountTotal"] = -(item.discount_amount * goods_detail["qty"])
 
 
 
