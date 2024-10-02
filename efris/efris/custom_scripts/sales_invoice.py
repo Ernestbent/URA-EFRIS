@@ -297,6 +297,14 @@ def on_send(doc, event):
                 "tax_amount": taxes.tax_amount,
                 # Add other fields from the 'taxes' table as needed
             }
+    buyer_categories ={
+        "B2B":"0",
+        "B2C":"1",
+        "Foreigner":"2",
+        "B2G":"3"
+    }      
+    buyer = doc.custom_group
+    buyer_types = buyer_categories.get(buyer, "")
 
     json_data = [
         {
@@ -331,16 +339,16 @@ def on_send(doc, event):
             "buyerDetails": {
                 "buyerTin": doc.tax_id,
                 "buyerNinBrn": "",
-                "buyerPassportNum": "",
+                "buyerPassportNum": doc.custom_passport_number,
                 "buyerLegalName": doc.customer,
                 "buyerBusinessName": doc.customer,
-                "buyerAddress": "",
+                "buyerAddress": doc.custom_address,
                 "buyerEmail": doc.custom_email_id,
                 "buyerMobilePhone": "",
                 "buyerLinePhone": "",
                 "buyerPlaceOfBusi": "",
-                "buyerType": "1",
-                "buyerCitizenship": "",
+                "buyerType": buyer_types,
+                "buyerCitizenship": doc.custom_citizenship,
                 "buyerSector": "1",
                 "buyerReferenceNo": "",
             },
