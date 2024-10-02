@@ -138,7 +138,8 @@ def on_send(doc, event):
             "goods_category_id":item.custom_goods_category_id,
             "item_tax_template":item.item_tax_template,
             "discount_amount":item.discount_amount,
-            "discount_percentage":item.discount_percentage
+            "discount_percentage":item.discount_percentage,
+            "net_amount":item.net_amount
         }
         # Append the item_data dictionary to the items_data list
         items_data.append(item_data)
@@ -163,7 +164,7 @@ def on_send(doc, event):
         else:
             tax_category_code = "01"
             tax_rate = "0.18"
-            tax = round((18 / 118) * item.qty * item.rate, 2)
+            tax = round((item.amount - item.net_amount),2)
             grossAmount = item.amount
             taxAmount = round(((18 / 118) * item.amount), 2)
             netAmount = grossAmount - tax
@@ -364,11 +365,11 @@ def on_send(doc, event):
                 "remarks": "We appreciate your continued support",
                 "qrCode": "",
             },
-            "payWay": {
-                "paymentMode": "102",
-                "paymentAmount": doc.total,
-                "orderNumber": "a",
-            },
+            # "payWay": {
+            #     "paymentMode": "102",
+            #     "paymentAmount": doc.total,
+            #     "orderNumber": "a",
+            # },
             "extend": {"reason": "reason", "reasonCode": "102"},
             "importServicesSeller": {
                 "importBusinessName": "",
@@ -523,14 +524,7 @@ def on_send(doc, event):
 
                 # Log the successful integration request
                 log_integration_request('Completed', api_url, headers, data_to_post, response_data)
-        
-                # Check if qr_data is not None and not an empty string.
 
-                print("Device No:", doc.custom_device_number)
-                print("QR Code:", doc.custom_qr_code)
-                print("Verification Code:", doc.custom_verification_code)
-                print("Fiscal Document Number:", doc.custom_fdn)
-                print("Invoice ID:", doc.custom_invoice_number)
 
                 doc.save()
 

@@ -59,13 +59,13 @@ def on_save(doc, event):
             "unitPrice": doc.standard_rate,
             "currency": "101",  # Assuming default currency code
             "commodityCategoryId": doc.custom_goodss_category_id,
-            "haveExciseTax": "102",  # Assuming default value
+            "haveExciseTax": doc.custom_has_excise_tax,  # Assuming default value
             "description": doc.description,
             "stockPrewarning": "10",  # Assuming default value
             "pieceMeasureUnit": "",
             "havePieceUnit": "102",  # Assuming default value
             "pieceUnitPrice": "",
-            "exciseDutyCode": "",
+            "exciseDutyCode": doc.custom_excise_duty_code,
             "haveOtherUnit": "",
             "goodsTypeCode": "101",  # Assuming default value
             "goodsOtherUnits": [],
