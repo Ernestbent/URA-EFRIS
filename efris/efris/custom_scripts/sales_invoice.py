@@ -164,7 +164,7 @@ def on_send(doc, event):
         else:
             tax_category_code = "01"
             tax_rate = "0.18"
-            tax = round((item.amount - item.net_amount),2)
+            tax = round(((18 / 118) * item.amount), 2)
             grossAmount = item.amount
             taxAmount = round(((18 / 118) * item.amount), 2)
             netAmount = grossAmount - tax

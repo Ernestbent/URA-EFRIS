@@ -153,6 +153,9 @@ doc_events = {
     },
     "Stock Entry":{
         "on_submit":"efris.efris.custom_scripts.stock_adjustment.stock_adjust"
+    },
+    "Tax Payer Status":{
+        "validate":"efris.efris.custom_scripts.check_vat_status.taxpayer_status"
     }
 }
 

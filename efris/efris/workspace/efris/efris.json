@@ -73,25 +73,6 @@
   {
    "hidden": 0,
    "is_query_report": 0,
-   "label": "Tax Payer Search",
-   "link_count": 1,
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Card Break"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Tax Payer Details",
-   "link_count": 0,
-   "link_to": "TaxPayer Information",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
    "label": "Item Information",
    "link_count": 4,
    "link_type": "DocType",
@@ -204,9 +185,38 @@
    "link_type": "DocType",
    "onboard": 0,
    "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Tax Payer Search",
+   "link_count": 2,
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Tax Payer Details",
+   "link_count": 0,
+   "link_to": "TaxPayer Information",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Tax Payer Status",
+   "link_count": 0,
+   "link_to": "Tax Payer Status",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
   }
  ],
- "modified": "2024-07-31 12:22:49.600704",
+ "modified": "2024-10-07 11:51:07.060912",
  "modified_by": "Administrator",
  "module": "Efris",
  "name": "EFRIS",
