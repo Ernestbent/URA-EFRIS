@@ -136,7 +136,10 @@ after_install = "efris.migrations.alter_goods_details.alter_goods_details_schema
 
 doc_events = {
 	"TaxPayer Information":{
-        "on_submit":"efris.efris.doctype.taxpayer_information.taxquery.query_tax_payer"
+        "on_submit":"efris.efris.custom_scripts.taxquery.query_tax_payer"
+    },
+    "Customer":{
+        "validate":"efris.efris.custom_scripts.taxquery.query_tax_payer"
     },
     "Item":{
         "validate":"efris.efris.custom_scripts.item_add.on_save"
@@ -156,7 +159,8 @@ doc_events = {
     },
     "Tax Payer Status":{
         "validate":"efris.efris.custom_scripts.check_vat_status.taxpayer_status"
-    }
+    },
+    
 }
 
 # Scheduled Tasks

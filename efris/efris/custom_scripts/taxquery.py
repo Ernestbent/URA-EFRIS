@@ -9,24 +9,19 @@ eat_timezone = timezone(timedelta(hours=3))
 
 def log_integration_request(status, url, headers, data, response, error=""):
     valid_statuses = ["", "Queued", "Authorized", "Completed", "Cancelled", "Failed"]
-    if status not in valid_statuses:
-        status = "Failed"  # Default to "Failed" if status is invalid
-
-    # Format data and response as pretty-printed JSON
-    formatted_data = json.dumps(data, indent=4)
-    formatted_response = json.dumps(response, indent=4)
-
+    status = status if status in valid_statuses else "Failed"
+    
     integration_request = frappe.get_doc({
         "doctype": "Integration Request",
         "integration_type": "Remote",
-        "integration_request_service": "Query TaxPayer Information By TIN NIN",
-        "is_remote_request": True,
         "method": "POST",
+        "integration_request_service": "Customer TIN Validation",
+        "is_remote_request": True,
         "status": status,
         "url": url,
-        "request_headers": json.dumps(headers, indent=4),
-        "data": formatted_data,
-        "output": formatted_response,
+        "request_headers": json.dumps(headers),
+        "data": json.dumps(data),
+        "output": json.dumps(response),
         "error": error,
         "execution_time": datetime.now(eat_timezone).strftime("%Y-%m-%d %H:%M:%S")
     })
@@ -56,7 +51,7 @@ def query_tax_payer(doc, event):
     
     data_to_post = {
         "ninBrn": "",
-        "tin": doc.tin
+        "tin": doc.tax_id
     }
     
     json_string = json.dumps(data_to_post)
@@ -103,44 +98,51 @@ def query_tax_payer(doc, event):
     }
 
     headers = {'Content-Type': "application/json"}
-    
+
     try:
+        # Make the POST request to the API
         response = requests.post(server_url, json=data, headers=headers)
-        response.raise_for_status()
-        
-        response_data = response.json()
-        # Parse the JSON response content.
-        response_data = json.loads(response.text)
+        response_data = response.json()  # Directly parse JSON response
+
+        # Get the response payload
+        response_payload = json.dumps(response_data)
+        print(response_payload)
+
+        # Access the encoded information in the response payload from Ura 
+        content = response_data["data"]["content"]
+
+        # Decode the Base64-encoded content
+        decoded_bytes = base64.b64decode(content)
+
+        # Convert bytes to a string (usually UTF-8)
+        decoded_string = decoded_bytes.decode('utf-8')
+
+        # Step 2: Convert the decoded string to a dictionary
+        decoded_data = json.loads(decoded_string)
+        doc.custom_business_name = decoded_data["taxpayer"]["legalName"]
+        doc.custom_ninbrn = decoded_data["taxpayer"]["ninBrn"]
+        doc.custom_tax_payer_type = decoded_data["taxpayer"]["taxpayerType"]
+        doc.custom_contact_email = decoded_data["taxpayer"]["contactEmail"]
+        doc.custom_contact_number = decoded_data["taxpayer"]["contactNumber"]
+        doc.custom_address = decoded_data["taxpayer"]["address"]
+        doc.custom_government_tin = decoded_data["taxpayer"]["governmentTIN"]
+
+        # Print the decoded string
+        print(decoded_string)
+
+        # Access the return message from the response
         return_message = response_data["returnStateInfo"]["returnMessage"]
         
-       
-       
+        # Check for success (status code 200) and handle the response
         if response.status_code == 200 and return_message == "SUCCESS":
-            frappe.msgprint("Information Retrieved  successfully")
-            encoded_content = response_data["data"]["content"]
-
-            decoded_content = base64.b64decode(encoded_content).decode("utf-8")
-        # Convert the JSON string to a Python dictionary
-            content_dict = json.loads(decoded_content)
-
-            # Format the JSON with indent 4 spaces
-            formatted_content = json.dumps(content_dict, indent=4)
-
-            # Assign the formatted JSON to the doc's field
-            doc.information = formatted_content
+            frappe.msgprint("Sent successfully")
             log_integration_request('Completed', server_url, headers, data, response_data)
-            # Save the document to persist the changes
-            doc.save()
-             # Log the successful integration request
         else:
-            frappe.throw(
-                title="Oops",
-                msg=return_message
-            )
-  
+            # Print the return message in red on screen like frappe.throw
+            frappe.throw(f"Oops->{return_message}")
+            doc.status = 0  # Set the document status to 'Draft'
+            log_integration_request('Failed', server_url, headers, data, response_data, return_message)
     except requests.exceptions.RequestException as e:
-        # Log the failed integration request
+        frappe.throw(f"An error occurred while making the API request: {str(e)}")
+        doc.docstatus = 0  # Set the document status to 'Draft'
         log_integration_request('Failed', server_url, headers, data, {}, str(e))
-        frappe.throw(f"API request failed: {e}")
-        doc.docstatus = 0
-        doc.save()
