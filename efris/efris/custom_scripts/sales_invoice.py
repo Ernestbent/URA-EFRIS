@@ -164,10 +164,10 @@ def on_send(doc, event):
         else:
             tax_category_code = "01"
             tax_rate = "0.18"
-            tax = round(((18 / 118) * item.amount), 2)
+            tax = round((item.amount - item.net_amount),2)
             grossAmount = item.amount
-            taxAmount = round(((18 / 118) * item.amount), 2)
-            netAmount = grossAmount - tax
+            taxAmount = item.amount - item.net_amount
+            netAmount = round((grossAmount - tax),2)
 
         # Check if tax template already exists in tax_categories dictionary
         if item.item_tax_template in tax_categories:
@@ -232,10 +232,10 @@ def on_send(doc, event):
         
                 
         if goods_detail["discountFlag"] == "1":
-            goods_detail["unitPrice"] = item.rate + item.discount_amount
-            goods_detail["total"] = goods_detail["unitPrice"]*goods_detail["qty"]
+            goods_detail["unitPrice"] = round((item.rate + item.discount_amount),2)
+            goods_detail["total"] = round((goods_detail["unitPrice"]*goods_detail["qty"]),2)
             goods_detail["tax"] = round(goods_detail["total"] * 18 / 118, 2)
-            goods_detail["discountTotal"] = -(item.discount_amount * goods_detail["qty"])
+            goods_detail["discountTotal"] = round(-(item.discount_amount * goods_detail["qty"]),2)
 
 
 
@@ -338,17 +338,17 @@ def on_send(doc, event):
             },
             "buyerDetails": {
                 "buyerTin": doc.tax_id,
-                "buyerNinBrn": "",
+                "buyerNinBrn": doc.custom_ninbrn,
                 "buyerPassportNum": doc.custom_passport_number,
                 "buyerLegalName": doc.customer,
-                "buyerBusinessName": doc.customer,
+                "buyerBusinessName": doc.custom_business_name,
                 "buyerAddress": doc.custom_address,
-                "buyerEmail": doc.custom_email_id,
+                "buyerEmail": doc.custom_email_address,
                 "buyerMobilePhone": "",
                 "buyerLinePhone": "",
                 "buyerPlaceOfBusi": "",
                 "buyerType": buyer_types,
-                "buyerCitizenship": doc.custom_citizenship,
+                "buyerCitizenship": "",
                 "buyerSector": "1",
                 "buyerReferenceNo": "",
             },
@@ -367,7 +367,7 @@ def on_send(doc, event):
             "summary": {
                 "netAmount": round((doc.total - total_tax_amount), 2),
                 "taxAmount": round(total_tax_amount, 2),
-                "grossAmount": doc.total,
+                "grossAmount": round(doc.total, 2),
                 "itemCount": item_count,
                 "modeCode": "0",
                 "remarks": "We appreciate your continued support",

@@ -27,8 +27,13 @@ def log_integration_request(status, url, headers, data, response, error=""):
     })
     integration_request.insert(ignore_permissions=True)
     frappe.db.commit()
+    
 
 def query_tax_payer(doc, event):
+    # Check if custom_retrieve_taxpayer_infor_from_ura is checked
+    if not doc.custom_retrieve_taxpayer_infor_from_ura:
+        return  # Skip API call if checkbox is not checked
+
     # Fetch the current session company
     company = frappe.defaults.get_user_default("company")
     if not company:
