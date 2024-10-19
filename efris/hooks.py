@@ -29,10 +29,19 @@ app_include_js = "/assets/efris/js/integration_request_widget.js"
 # page_js = {"page" : "public/js/file.js"}
 
 # include js in doctype views
-doctype_js = {
-    "Item": "public/js/item_custom_button.js",  # JavaScript file for the Item doctype
-    "Sales Order": "public/js/sales_order_custom_button.js",  # Example for another doctype
-    # Add more as needed for other doctypes
+ddoctype_js = {
+    "Item": [
+        "public/js/fetch_efris_items.js",
+        "public/js/toggle_excise_duty.js",
+        "public/js/item_custom_button.js"
+    ],
+    "Purchase Invoice": "public/js/filter_items_pi.js",
+    "Sales Invoice": [
+        "public/js/filter_items_si.js",
+        "public/js/credit_reason.js"
+    ],
+    "Stock Entry": "public/js/filter_items_stock.js",
+    "Sales Order": "public/js/sales_order_custom_button.js"
 }
 # doctype_js = {"doctype" : "public/js/custom_button.js"}
 # doctype_js = {"doctype" : "public/js/item_custom_button.js"}

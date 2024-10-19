@@ -559,7 +559,7 @@ def on_send(doc, event):
             "oriInvoiceId": doc.custom_invoice_number,
             "oriInvoiceNo": doc.custom_fdn,
             "reasonCode": "102",
-            "reason": "Refund",
+            "reason": doc.custom_reason,
             "applicationTime": datetime_combined,
             "invoiceApplyCategoryCode": "101",
             "currency": doc.currency,
