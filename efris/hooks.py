@@ -33,7 +33,7 @@ doctype_js = {
     "Item":"public/js/fetch_efris_items.js", 
     "Purchase Invoice":"public/js/filter_items_pi.js",
     "Sales Invoice":"public/js/filter_items_si.js",
-    "Item":"public/js/toggle_excise_duty.js",
+    # "Item":"public/js/toggle_excise_duty.js",
     "Stock Entry":"public/js/filter_items_stock.js",
     "Item":"public/js/toggle_excise_duty.js",
     "Sales Invoice":"public/js/credit_reason.js",
