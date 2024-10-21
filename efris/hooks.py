@@ -31,6 +31,7 @@ app_include_js = "/assets/efris/js/integration_request_widget.js"
 # include js in doctype views
 doctype_js = {
     "Item":"public/js/fetch_efris_items.js",
+    "Item":"public/js/toggle_excise_duty.js",
     "Purchase Invoice":"public/js/filter_items_pi.js",
     "Sales Invoice":"public/js/filter_items_si.js",
     "Item":"public/js/toggle_excise_duty.js",
