@@ -140,7 +140,7 @@ def query_tax_payer(doc, event):
         
         # Check for success (status code 200) and handle the response
         if response.status_code == 200 and return_message == "SUCCESS":
-            frappe.msgprint("Sent successfully")
+            frappe.msgprint("Success")
             log_integration_request('Completed', server_url, headers, data, response_data)
         else:
             # Print the return message in red on screen like frappe.throw
