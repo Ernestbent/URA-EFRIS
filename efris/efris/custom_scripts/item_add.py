@@ -58,7 +58,7 @@ def on_save(doc, event):
             "measureUnit": doc.custom_uom_code_efris,  # Example field, adjust as needed
             "unitPrice": doc.standard_rate,
             "currency": "101",  # Assuming default currency code
-            "commodityCategoryId": doc.custom_goodss_category_id,
+            "commodityCategoryId": doc.custom_goods_category_id,
             "haveExciseTax": doc.custom_has_excise_tax,  # Assuming default value
             "description": doc.description,
             "stockPrewarning": "10",  # Assuming default value
