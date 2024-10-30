@@ -209,10 +209,10 @@ def on_send(doc, event):
             "total": item.amount,
             "taxRate": tax_rate,
             "tax": tax,
-            "discountTotal": "" if item.discount_amount == 0 or item.discount_percentage == 0 else -(item.discount_amount),
-            "discountTaxRate": item.discount_percentage,
+            "discountTotal": "" ,
+            "discountTaxRate":"",
             "orderNumber": str(len(goods_details)),
-            "discountFlag": "1" if item.discount_amount else "2",  # Set to '1' if discountTotal exists
+            "discountFlag": "2", 
             "deemedFlag": "2",
             "exciseFlag": "2",
             "categoryId": "",
@@ -229,62 +229,9 @@ def on_send(doc, event):
             "exciseRateName": "",
             "vatApplicableFlag": "1",
         }
-        
-                
-        if goods_detail["discountFlag"] == "1":
-            goods_detail["unitPrice"] = round((item.rate + item.discount_amount),2)
-            goods_detail["total"] = round((goods_detail["unitPrice"]*goods_detail["qty"]),2)
-            goods_detail["tax"] = round(goods_detail["total"] * 18 / 118, 2)
-            goods_detail["discountTotal"] = round(-(item.discount_amount * goods_detail["qty"]),2)
-
-
 
         goods_details.append(goods_detail)
 
-        # If discountFlag is "1", duplicate and modify
-        if goods_detail["discountFlag"] == "1":
-            # Create a duplicate of all fields
-            new_goods_detail = goods_detail.copy() 
-            
-            # Modify specific fields in the duplicated entry
-            new_goods_detail["item"] = goods_detail["item"] + " (Discount)"
-            new_goods_detail["qty"] = ""
-            new_goods_detail["unitPrice"] = ""
-            new_goods_detail["total"] = (goods_detail["discountTotal"])
-            new_goods_detail["tax"] = round(((18 / 118) * (goods_detail["discountTotal"])), 2)
-            new_goods_detail["orderNumber"] = str(len(goods_details))  # Increment order number for the duplicate
-            
-            # Keep the remaining fields the same
-            new_goods_detail["discountTotal"] = ""
-            new_goods_detail["discountTaxRate"] = ""
-            new_goods_detail["discountFlag"] = "0"
-            new_goods_detail["deemedFlag"] = "2"
-            new_goods_detail["exciseFlag"] = "2"
-            new_goods_detail["categoryId"] = ""
-            new_goods_detail["categoryName"] = ""
-            new_goods_detail["goodsCategoryId"] = goods_detail["goodsCategoryId"]
-            new_goods_detail["goodsCategoryName"] = ""
-            new_goods_detail["exciseRate"] = ""
-            new_goods_detail["exciseRule"] = ""
-            new_goods_detail["exciseTax"] = ""
-            new_goods_detail["pack"] = ""
-            new_goods_detail["stick"] = ""
-            new_goods_detail["exciseUnit"] = ""
-            new_goods_detail["exciseCurrency"] = ""
-            new_goods_detail["exciseRateName"] = ""
-            new_goods_detail["vatApplicableFlag"] = "1"
-
-            # Append the modified duplicate to the goods_details list
-            goods_details.append(new_goods_detail)
-
-        # Add to total discounts (convert to float if necessary)
-        if goods_detail["discountFlag"] == "1" and goods_detail["discountTotal"]:
-            total_discounts += float(goods_detail["discountTotal"])
-
-        # After processing all items, print the total discounts
-        print(f"Total Discounts: {total_discounts}")
-
-        
         total_tax_amount = sum(
             tax_category["taxAmount"] for tax_category in tax_categories_list
         )
@@ -305,6 +252,13 @@ def on_send(doc, event):
     }      
     buyer = doc.custom_group
     buyer_types = buyer_categories.get(buyer, "")
+
+    invoice_categories ={
+        "Invoice":"1",
+        "Receipt":"2"
+    }
+    invoice_t = doc.custom_invoicereceipt
+    invoice_kind = invoice_categories.get(invoice_t, "")
 
     json_data = [
         {
@@ -331,7 +285,7 @@ def on_send(doc, event):
                 "currency": doc.currency,
                 "oriInvoiceId": "1",
                 "invoiceType": "1",
-                "invoiceKind": "1",
+                "invoiceKind": invoice_kind,
                 "dataSource": "106",
                 "invoiceIndustryCode": "",
                 "isBatch": "0",
@@ -341,7 +295,7 @@ def on_send(doc, event):
                 "buyerNinBrn": doc.custom_ninbrn,
                 "buyerPassportNum": doc.custom_passport_number,
                 "buyerLegalName": doc.customer,
-                "buyerBusinessName": doc.custom_business_name,
+                "buyerBusinessName": doc.customer,
                 "buyerAddress": doc.custom_address,
                 "buyerEmail": doc.custom_email_address,
                 "buyerMobilePhone": "",
