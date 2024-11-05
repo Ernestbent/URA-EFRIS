@@ -253,12 +253,12 @@ def on_send(doc, event):
     buyer = doc.custom_group
     buyer_types = buyer_categories.get(buyer, "")
 
-    invoice_categories ={
-        "Invoice":"1",
-        "Receipt":"2"
-    }
-    invoice_t = doc.custom_invoicereceipt
-    invoice_kind = invoice_categories.get(invoice_t, "")
+    # invoice_categories ={
+    #     "Invoice":"1",
+    #     "Receipt":"2"
+    # }
+    # invoice_t = doc.custom_invoicereceipt
+    # invoice_kind = invoice_categories.get(invoice_t, "")
 
     json_data = [
         {
@@ -285,7 +285,7 @@ def on_send(doc, event):
                 "currency": doc.currency,
                 "oriInvoiceId": "1",
                 "invoiceType": "1",
-                "invoiceKind": invoice_kind,
+                "invoiceKind":"1",
                 "dataSource": "106",
                 "invoiceIndustryCode": "",
                 "isBatch": "0",
