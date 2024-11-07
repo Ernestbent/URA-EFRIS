@@ -31,7 +31,7 @@ def log_integration_request(status, url, headers, data, response, error=""):
 
 def query_tax_payer(doc, event):
     # Check if custom_retrieve_taxpayer_infor_from_ura is checked
-    if not doc.custom_retrieve_taxpayer_infor_from_ura or not doc.custom_retrieve_taxpayer_infor_:
+    if not doc.custom_retrieve_taxpayer_infor_from_ura:
         return  # Skip API call if checkbox is not checked
 
     # Fetch the current session company
@@ -131,7 +131,9 @@ def query_tax_payer(doc, event):
         doc.custom_contact_number = decoded_data["taxpayer"]["contactNumber"]
         doc.custom_address = decoded_data["taxpayer"]["address"]
         doc.custom_government_tin = decoded_data["taxpayer"]["governmentTIN"]
-
+        doc.customer_name = decoded_data["taxpayer"]["legalName"]
+        doc.save()
+        
         # Print the decoded string
         print(decoded_string)
 

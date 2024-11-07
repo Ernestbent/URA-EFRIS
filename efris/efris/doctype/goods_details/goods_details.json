@@ -23,22 +23,26 @@
   {
    "fieldname": "segment_code",
    "fieldtype": "Data",
-   "label": "Segment Code"
+   "label": "Segment Code",
+   "length": 500
   },
   {
    "fieldname": "segment_name",
    "fieldtype": "Data",
-   "label": "Segment Name"
+   "label": "Segment Name",
+   "length": 500
   },
   {
    "fieldname": "family_code",
    "fieldtype": "Data",
-   "label": "Family Code"
+   "label": "Family Code",
+   "length": 500
   },
   {
    "fieldname": "family_name",
    "fieldtype": "Data",
-   "label": "Family Name"
+   "label": "Family Name",
+   "length": 500
   },
   {
    "fieldname": "column_break_edwf",
@@ -47,12 +51,14 @@
   {
    "fieldname": "class_code",
    "fieldtype": "Data",
-   "label": "Class Code"
+   "label": "Class Code",
+   "length": 500
   },
   {
    "fieldname": "class_name",
    "fieldtype": "Data",
-   "label": "Class Name"
+   "label": "Class Name",
+   "length": 500
   },
   {
    "fieldname": "section_break_laiu",
@@ -61,12 +67,14 @@
   {
    "fieldname": "commodity_code",
    "fieldtype": "Data",
-   "label": "Commodity Code"
+   "label": "Commodity Code",
+   "length": 500
   },
   {
    "fieldname": "commodity_name",
    "fieldtype": "Data",
    "label": "Commodity Name",
+   "length": 500,
    "unique": 1
   },
   {
@@ -76,12 +84,13 @@
   {
    "fieldname": "is_it_a_service",
    "fieldtype": "Data",
-   "label": "Is It a Service?"
+   "label": "Is It a Service?",
+   "length": 500
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-09-04 12:52:17.811762",
+ "modified": "2024-11-05 18:55:33.978726",
  "modified_by": "Administrator",
  "module": "Efris",
  "name": "Goods Details",
