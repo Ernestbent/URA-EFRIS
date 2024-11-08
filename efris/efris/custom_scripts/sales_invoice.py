@@ -491,6 +491,8 @@ def on_send(doc, event):
                 doc.save()
 
             else:
+                # Log failure and throw an exception with the return message
+                log_integration_request('Failed', server_url, headers, data_to_post, response_data, return_message)
                 frappe.throw(
                     title="EFRIS API Error",
                     msg=return_message,

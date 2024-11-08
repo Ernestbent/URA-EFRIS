@@ -175,6 +175,8 @@ def on_stock(doc, event):
             erroMessage = data[0]["returnMessage"]
             frappe.throw(title="", msg=erroMessage)
         else:
+            # Log failure and throw an exception with the return message
+            log_integration_request('Failed', server_url, headers, data_to_post, response_data, return_message)
             frappe.throw(title="EFRIS API Error", msg=f"{return_message}")
 
             doc.docstatus = 0

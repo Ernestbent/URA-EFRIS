@@ -30,6 +30,7 @@ app_include_js = "/assets/efris/js/integration_request_widget.js"
 
 # include js in doctype views
 doctype_js = {
+    "Customer":"public/js/tin_valid.js",
     "Item":"public/js/fetch_efris_items.js", 
     "Purchase Invoice":"public/js/filter_items_pi.js",
     "Sales Invoice":"public/js/filter_items_si.js",
@@ -143,10 +144,10 @@ after_install = "efris.migrations.alter_goods_details.alter_goods_details_schema
 
 doc_events = {
 	"TaxPayer Information":{
-        "on_submit":"efris.efris.custom_scripts.taxquery.query_tax_payer"
+        "on_submit":"efris.efris.custom_scripts.t119.query_tax_payer_info"
     },
     "Customer":{
-        "on_update":"efris.efris.custom_scripts.taxquery.query_tax_payer"
+        "before_save":"efris.efris.custom_scripts.taxquery.query_tax_payer"
     },
     "Item":{
         "validate":"efris.efris.custom_scripts.item_add.on_save"

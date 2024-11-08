@@ -42,13 +42,11 @@ def log_integration_request(status, url, headers, data, response, error=""):
         print(f"Error logging integration request: {str(e)}")
         frappe.throw(f"Error logging integration request: {str(e)}")
 
-def query_tax_payer(doc, event):
-    # Check if custom_retrieve_taxpayer_infor_from_ura is checked
-    if not doc.custom_retrieve_taxpayer_infor_from_ura:
-        return  # Skip API call if checkbox is not checked
+def query_tax_payer_info(doc, event):
+    
 
     # Fetch the current session company
-    company = frappe.defaults.get_user_default("company")
+    company = frappe.defaults.get_user_default("company")   
     if not company:
         frappe.throw("No default company set for the current session")
 
@@ -68,8 +66,8 @@ def query_tax_payer(doc, event):
     current_time = datetime.now(eat_timezone).strftime("%Y-%m-%d %H:%M:%S")
     
     data_to_post = {
-        "ninBrn": "",
-        "tin": doc.tax_id
+        "ninBrn": doc.nin,
+        "tin": doc.tin
     }
     
     json_string = json.dumps(data_to_post)
@@ -143,15 +141,10 @@ def query_tax_payer(doc, event):
 
                 # Step 2: Convert the decoded string to a dictionary
                 decoded_data = json.loads(decoded_string)
-                doc.custom_business_name = decoded_data["taxpayer"].get("legalName", "")
-                doc.custom_ninbrn = decoded_data["taxpayer"].get("ninBrn", "")
-                doc.custom_tax_payer_type = decoded_data["taxpayer"].get("taxpayerType", "")
-                doc.custom_contact_email = decoded_data["taxpayer"].get("contactEmail", "")
-                doc.custom_contact_number = decoded_data["taxpayer"].get("contactNumber", "")
-                doc.custom_address = decoded_data["taxpayer"].get("address", "")
-                doc.custom_government_tin = decoded_data["taxpayer"].get("governmentTIN", "")
-                doc.customer_name = decoded_data["taxpayer"].get("legalName", "")
-                doc.name = doc.customer_name
+                doc.information = decoded_string  # Store the decoded data
+              
+                
+                
                 
                 # Print the decoded string
                 print(decoded_string)
@@ -166,6 +159,7 @@ def query_tax_payer(doc, event):
             log_integration_request('Failed', server_url, headers, data, response_data, return_message)
             frappe.throw(f"Oops->{return_message}")
             doc.status = 0  # Set the document status to 'Draft'
+            doc.save()
     except requests.exceptions.RequestException as e:
         # Handle request exceptions (e.g., network errors)
         log_integration_request('Failed', server_url, headers, data, {}, str(e))
