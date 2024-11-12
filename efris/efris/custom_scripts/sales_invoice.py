@@ -487,6 +487,7 @@ def on_send(doc, event):
                 doc.custom_company_email_id = data.get("sellerDetails", {}).get("emailAddress")
                 doc.custom_served_by = data.get("basicInformation", {}).get("operator")
                 doc.custom_legal_name = data.get("sellerDetails", {}).get("legalName")
+                doc.custom_companys_address =data.get("sellerDetails", {}).get("address")
                 
 
                 # Log the successful integration request
