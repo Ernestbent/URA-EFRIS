@@ -483,6 +483,11 @@ def on_send(doc, event):
                 doc.custom_fdn  = data.get("basicInformation", {}).get("invoiceNo")
                 doc.custom_qr_code = data.get("summary", {}).get("qrCode")
                 doc.custom_invoice_number = data.get("basicInformation", {}).get("invoiceId")
+                doc.custom_brn = data.get("sellerDetails", {}).get("ninBrn")
+                doc.custom_company_email_id = data.get("sellerDetails", {}).get("emailAddress")
+                doc.custom_served_by = data.get("basicInformation", {}).get("operator")
+                doc.custom_legal_name = data.get("sellerDetails", {}).get("legalName")
+                
 
                 # Log the successful integration request
                 log_integration_request('Completed', api_url, headers, data_to_post, response_data)
