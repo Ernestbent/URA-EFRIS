@@ -166,7 +166,7 @@ def on_send(doc, event):
             tax_rate = "0.18"
             tax = round((item.amount - item.net_amount),2)
             grossAmount = item.amount
-            taxAmount = item.amount - item.net_amount
+            taxAmount = round((item.amount - item.net_amount),2)
             netAmount = round((grossAmount - tax),2)
 
         # Check if tax template already exists in tax_categories dictionary
@@ -534,8 +534,8 @@ def on_send(doc, event):
             "goodsDetails": goods_details,
             "taxDetails": tax_categories_list,
             "summary": {
-                "netAmount": round((doc.total - total_tax_amount), 2),
-                "taxAmount": round((total_tax_amount), 2),
+                "netAmount": doc.net_total,
+                "taxAmount": doc.total - doc.net_total,
                 "grossAmount": doc.total,
                 "itemCount": item_count,
                 "modeCode": "0",

@@ -168,6 +168,9 @@ doc_events = {
     "Tax Payer Status":{
         "validate":"efris.efris.custom_scripts.check_vat_status.taxpayer_status"
     },
+    "Supplier":{
+        "before_save":"efris.efris.custom_scripts.query_supplier_info.query_tax_payer"
+    }
     
 }
 
