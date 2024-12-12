@@ -1,0 +1,32 @@
+{
+ "custom_fields": [],
+ "custom_perms": [],
+ "doctype": "Sales Taxes and Charges",
+ "links": [],
+ "property_setters": [
+  {
+   "_assign": null,
+   "_comments": null,
+   "_liked_by": null,
+   "_user_tags": null,
+   "creation": "2024-12-12 15:17:30.572998",
+   "default_value": null,
+   "doc_type": "Sales Taxes and Charges",
+   "docstatus": 0,
+   "doctype_or_field": "DocField",
+   "field_name": "tax_amount",
+   "idx": 0,
+   "is_system_generated": 0,
+   "modified": "2024-12-12 15:17:30.572998",
+   "modified_by": "Administrator",
+   "module": null,
+   "name": "Sales Taxes and Charges-tax_amount-precision",
+   "owner": "Administrator",
+   "property": "precision",
+   "property_type": "Select",
+   "row_name": null,
+   "value": ""
+  }
+ ],
+ "sync_on_migrate": 1
+}

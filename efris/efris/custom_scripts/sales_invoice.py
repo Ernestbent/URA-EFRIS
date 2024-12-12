@@ -164,10 +164,10 @@ def on_send(doc, event):
         else:
             tax_category_code = "01"
             tax_rate = "0.18"
-            tax = round((item.amount - item.net_amount),2)
+            tax = round((item.amount - item.net_amount),3)
             grossAmount = item.amount
-            taxAmount = round((item.amount - item.net_amount),2)
-            netAmount = round((grossAmount - tax),2)
+            taxAmount = round((item.amount - item.net_amount),3)
+            netAmount = round((grossAmount - tax),3)
 
         # Check if tax template already exists in tax_categories dictionary
         if item.item_tax_template in tax_categories:
@@ -190,8 +190,8 @@ def on_send(doc, event):
             }
             # Round off the netAmount after completing all calculations
         for category in tax_categories.values():
-            category["netAmount"] = round(category["netAmount"], 2)
-            category["taxAmount"] = round(category["taxAmount"], 2)
+            category["netAmount"] = round(category["netAmount"], 3)
+            category["taxAmount"] = round(category["taxAmount"], 3)
 
             # Convert tax_categories dictionary to a list
         tax_categories_list = list(tax_categories.values())
@@ -319,9 +319,9 @@ def on_send(doc, event):
             "goodsDetails": goods_details,
             "taxDetails": tax_categories_list,
             "summary": {
-                "netAmount": round((doc.total - total_tax_amount), 2),
-                "taxAmount": round(total_tax_amount, 2),
-                "grossAmount": round(doc.total, 2),
+                "netAmount": round((doc.total - total_tax_amount), 3),
+                "taxAmount": round(total_tax_amount, 3),
+                "grossAmount": round(doc.total, 3),
                 "itemCount": item_count,
                 "modeCode": "0",
                 "remarks": "We appreciate your continued support",
@@ -492,25 +492,20 @@ def on_send(doc, event):
 
                 # Log the successful integration request
                 log_integration_request('Completed', api_url, headers, data_to_post, response_data)
-
-
                 doc.save()
-
             else:
-                # Log failure and throw an exception with the return message
-                log_integration_request('Failed', server_url, headers, data_to_post, response_data, return_message)
                 frappe.throw(
-                    title="EFRIS API Error",
-                    msg=return_message,
+                    title = "Opps API Error",
+                    msg=return_message
                 )
-                doc.docstatus = 0
-               
+                doc.status = 0
+                log_integration_request('Failed', api_url, headers, data_to_post, response_data, return_message)
 
         except requests.exceptions.RequestException as e:
             frappe.msgprint(f"Error making API request: {e}")
             # Set the document status to 'Draft'
             doc.docstatus = 0  # 0 represents 'Draft' status
-            doc.save()
+            
             # Log the failed integration request
             log_integration_request('Failed', api_url, headers, data, {}, str(e))
             frappe.throw(f"API request failed: {e}")
@@ -534,9 +529,9 @@ def on_send(doc, event):
             "goodsDetails": goods_details,
             "taxDetails": tax_categories_list,
             "summary": {
-                "netAmount": doc.net_total,
-                "taxAmount": doc.total - doc.net_total,
-                "grossAmount": doc.total,
+                "netAmount": round((doc.net_total),3),
+                "taxAmount": round((doc.total - doc.net_total),3),
+                "grossAmount": round((doc.total),3),
                 "itemCount": item_count,
                 "modeCode": "0",
                 "remarks": "We appreciate your continued support",

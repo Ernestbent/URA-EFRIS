@@ -155,12 +155,14 @@ def on_cancel(doc, event):
 
             # Log the successful integration request
             log_integration_request('Completed', api_url, headers, data_to_post, response_data)
-
+            
         else:
-            # Log the failed integration request
+            frappe.throw(
+                title="Oops API Error",
+                msg=return_message
+            )
+            doc.status = 0
             log_integration_request('Failed', api_url, headers, data_to_post, response_data, return_message)
-            frappe.throw(title="Oops! API Error", msg=return_message)
-            doc.docstatus = 0
 
 
     except requests.exceptions.RequestException as e:
@@ -168,7 +170,7 @@ def on_cancel(doc, event):
         log_integration_request('Failed', api_url, headers, data_to_post, {}, str(e))
         frappe.throw(f"Request failed: {e}")
         doc.docstatus = 0
-        doc.save()
+        
 
     # except json.JSONDecodeError as e:
     #     # Handle JSON decoding errors
