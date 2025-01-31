@@ -31,6 +31,7 @@ app_include_js = "/assets/efris/js/integration_request_widget.js"
 # include js in doctype views
 doctype_js = {
     "Customer":"public/js/tin_valid.js",
+    "Customer":"public/js/custom_button_customer.js",
     "Item":"public/js/fetch_efris_items.js", 
     "Purchase Invoice":"public/js/filter_items_pi.js",
     "Sales Invoice":"public/js/filter_items_si.js",
@@ -177,13 +178,11 @@ doc_events = {
 # Scheduled Tasks
 # ---------------
 
-# scheduler_events = {
-#     "cron": {
-#         "*/10 * * * *": [
-#             "efris.exchange_rates.get_exchange_rates"
-#         ]
-#     }
-# }
+scheduler_events = {
+    "hourly":[
+        "efris.efris.background_tasks.rates.get_exchange_rates"
+    ]
+}
 
 
 # Testing
