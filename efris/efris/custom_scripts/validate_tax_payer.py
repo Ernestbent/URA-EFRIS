@@ -7,57 +7,66 @@ import frappe
 # Define the East Africa Time (EAT) timezone
 eat_timezone = timezone(timedelta(hours=3))
 
-@frappe.whitelist()
-def make_api_call():
-    # Fetch the first customer or any condition you want
-    customer = frappe.get_all("Customer", fields=["tax_id"], limit=1)  # Fetch tax_id for the first customer
+def log_integration_request(status, url, headers, data, response, error=""):
+    """
+    Log integration requests with their details to the Integration Request doctype.
+    """
+    valid_statuses = ["", "Queued", "Authorized", "Completed", "Cancelled", "Failed"]
+    status = status if status in valid_statuses else "Failed"
     
-    if not customer:
-        frappe.throw("No customer found with tax_id.")
-    
-    tax_id = customer[0].get("tax_id")  # Get the tax_id from the first customer
-    
-    if not tax_id:
-        frappe.throw("No tax_id found for the customer.")
+    try:
+        integration_request = frappe.get_doc({
+            "doctype": "Integration Request",
+            "integration_type": "Remote",
+            "method": "POST",
+            "integration_request_service": "Customer TIN Validation",
+            "is_remote_request": True,
+            "status": status,
+            "url": url,
+            "request_headers": json.dumps(headers),
+            "data": json.dumps(data),
+            "output": json.dumps(response),
+            "error": error,
+            "execution_time": datetime.now(eat_timezone).strftime("%Y-%m-%d %H:%M:%S")
+        })
+        
+        integration_request.insert(ignore_permissions=True)
+        frappe.db.commit()
+    except Exception as e:
+        frappe.throw(f"Error logging integration request: {str(e)}")
 
-    # Fetch the current session company
+@frappe.whitelist()
+def make_api_call(tax_id=None, **kwargs):
+    """ 
+    Fetch taxpayer information from API and update Customer fields.
+    """
+    
     company = frappe.defaults.get_user_default("company")
     if not company:
         frappe.throw("No default company set for the current session")
 
-    # Fetch the Efris Settings document for the current company
     efris_settings_list = frappe.get_all("Efris Settings", filters={"custom_company": company}, limit=1)
     if not efris_settings_list:
         frappe.throw(f"No Efris Settings found for the company {company}")
 
     efris_settings_doc_name = efris_settings_list[0].name
     efris_settings_doc = frappe.get_doc("Efris Settings", efris_settings_doc_name)
-    
+
     device_number = efris_settings_doc.custom_device_number
     tin = efris_settings_doc.custom_tax_payers_tin
     server_url = efris_settings_doc.custom_server_url
 
-    # Get the current time in EAT
     current_time = datetime.now(eat_timezone).strftime("%Y-%m-%d %H:%M:%S")
-    
-    # Prepare the data for the API request
-    data_to_post = {
-        "ninBrn": "",  # If you have the BRN (Business Registration Number), you can pass it here.
-        "tin": tax_id   # Use the tax_id from the customer document
-    }
-    
+
+    data_to_post = {"ninBrn": "", "tin": tax_id}
     json_string = json.dumps(data_to_post)
     encoded_data = base64.b64encode(json_string.encode("utf-8")).decode("utf-8")
-    
+
     data = {
         "data": {
             "content": encoded_data,
             "signature": "",
-            "dataDescription": {
-                "codeType": "0",
-                "encryptionCode": "1",
-                "zipCode": "0",
-            },
+            "dataDescription": {"codeType": "0", "encryptionCode": "1", "zipCode": "0"},
         },
         "globalInfo": {
             "appId": "AP04",
@@ -83,27 +92,41 @@ def make_api_call():
                 "operatorName": "administrator",
             },
         },
-        "returnStateInfo": {
-            "returnCode": "",
-            "returnMessage": ""
-        },
+        "returnStateInfo": {"returnCode": "", "returnMessage": ""},
     }
 
     headers = {'Content-Type': "application/json"}
 
     try:
-        # Make the POST request to the API
         response = requests.post(server_url, json=data, headers=headers)
-        response_data = response.json()  # Directly parse JSON response
-
-        # Handle success or failure based on response
-        if response.status_code == 200:
-            
-            # Process the successful response
-            return {"status": "success", "data": response_data}
+        response_data = response.json()
+        return_message = response_data["returnStateInfo"].get("returnMessage", "Unknown error")
+        
+        if response.status_code == 200 and return_message == "SUCCESS":
+            content = response_data["data"].get("content", "")
+            if content:
+                decoded_bytes = base64.b64decode(content)
+                decoded_string = decoded_bytes.decode('utf-8')
+                decoded_data = json.loads(decoded_string)
+                log_integration_request('Completed', server_url, headers, data, response_data)
+                return {
+                    "status": "success",
+                    "customer_name": decoded_data["taxpayer"].get("legalName", ""),
+                    "business_name": decoded_data["taxpayer"].get("legalName", ""),
+                    "nin_brn": decoded_data["taxpayer"].get("ninBrn", ""),
+                    "taxpayer_type": decoded_data["taxpayer"].get("taxpayerType", ""),
+                    "contact_email": decoded_data["taxpayer"].get("contactEmail", ""),
+                    "contact_number": decoded_data["taxpayer"].get("contactNumber", ""),
+                    "address": decoded_data["taxpayer"].get("address", ""),
+                    "government_tin": decoded_data["taxpayer"].get("governmentTIN", "")
+                }
+            else:
+                log_integration_request('Failed', server_url, headers, data, response_data, "Missing content")
+                return {"status": "failed", "message": "Missing content in API response"}
         else:
-            return {"status": "failed", "message": response_data.get("returnStateInfo", {}).get("returnMessage", "Unknown error")}
-
+            log_integration_request('Failed', server_url, headers, data, response_data, return_message)
+            return {"status": "failed", "message": f"API call failed: {return_message}"}
+    
     except requests.exceptions.RequestException as e:
-        # Handle request exceptions
+        log_integration_request('Failed', server_url, headers, data, {}, str(e))
         return {"status": "failed", "message": str(e)}

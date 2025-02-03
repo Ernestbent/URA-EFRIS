@@ -147,9 +147,9 @@ doc_events = {
 	"TaxPayer Information":{
         "on_submit":"efris.efris.custom_scripts.t119.query_tax_payer_info"
     },
-    "Customer":{
-        "before_save":"efris.efris.custom_scripts.taxquery.query_tax_payer"
-    },
+    # "Customer":{
+    #     "before_save":"efris.efris.custom_scripts.taxquery.query_tax_payer"
+    # },
     "Item":{
         "validate":"efris.efris.custom_scripts.item_add.on_save"
     },
