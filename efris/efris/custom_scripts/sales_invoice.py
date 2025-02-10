@@ -298,7 +298,7 @@ def on_send(doc, event):
                 "buyerBusinessName": "",
                 "buyerAddress": doc.custom_address,
                 "buyerEmail": doc.custom_email_address,
-                "buyerMobilePhone": "",
+                "buyerMobilePhone": doc.custom_mobile_no,
                 "buyerLinePhone": "",
                 "buyerPlaceOfBusi": "",
                 "buyerType": buyer_types,
