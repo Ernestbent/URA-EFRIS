@@ -481,6 +481,7 @@ def on_send(doc, event):
                     "antifakeCode"
                 )
                 doc.custom_fdn  = data.get("basicInformation", {}).get("invoiceNo")
+                doc.custom_device_number  = data.get("basicInformation", {}).get("deviceNo")
                 doc.custom_qr_code = data.get("summary", {}).get("qrCode")
                 doc.custom_invoice_number = data.get("basicInformation", {}).get("invoiceId")
                 doc.custom_brn = data.get("sellerDetails", {}).get("ninBrn")
