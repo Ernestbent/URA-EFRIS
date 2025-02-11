@@ -500,13 +500,14 @@ def on_send(doc, event):
                     msg=return_message
                 )
                 doc.status = 0
+                doc.save()
                 log_integration_request('Failed', api_url, headers, data_to_post, response_data, return_message)
 
         except requests.exceptions.RequestException as e:
             frappe.msgprint(f"Error making API request: {e}")
             # Set the document status to 'Draft'
             doc.docstatus = 0  # 0 represents 'Draft' status
-            
+            doc.save()
             # Log the failed integration request
             log_integration_request('Failed', api_url, headers, data, {}, str(e))
             frappe.throw(f"API request failed: {e}")
@@ -634,6 +635,14 @@ def on_send(doc, event):
             response_data2 = json.loads(response.text)
             return_message2 = response_data2["returnStateInfo"]["returnMessage"]
 
+            ##Get the Response Data (Reference Number)
+            encoded_string = response_data2["data"]["content"]
+            decoded_string = base64.b64decode(encoded_string).decode("utf-8")
+
+            json_text = json.loads(decoded_string)
+            doc.custom_reference_number = json_text["referenceNo"]
+            doc.save()
+
             # Handle the response status code
             if response.status_code == 200 and return_message2 == "SUCCESS":
 
@@ -646,7 +655,6 @@ def on_send(doc, event):
                 title='EFRIS API Error',
                 msg=f"{return_message2}"
             )
-                doc.docstatus = 0
 
         except requests.exceptions.RequestException as e:
             frappe.msgprint(f"Error making API request: {e}")
