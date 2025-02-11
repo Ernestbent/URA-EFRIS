@@ -19,7 +19,7 @@ def log_integration_request(status, url, headers, data, response, error=""):
             "doctype": "Integration Request",
             "integration_type": "Remote",
             "method": "POST",
-            "integration_request_service": "Customer TIN Validation",
+            "integration_request_service": "Query Credit Note Number",
             "is_remote_request": True,
             "status": status,
             "url": url,
@@ -59,22 +59,23 @@ def query_credit_note(custom_reference_number=None, custom_fdn=None):
     current_time = datetime.now(eat_timezone).strftime("%Y-%m-%d %H:%M:%S")
 
     data_to_post = {
-            "referenceNo": custom_reference_number,
-            "oriInvoiceNo": custom_fdn,
-            "invoiceNo": "",
-            "combineKeywords": "",
-            "approveStatus": "101,102",
-            "queryType": "1",
-            "invoiceApplyCategoryCode": "101,103",
-            "startDate": "",
-            "endDate": "",
-            "pageNo": "1",
-            "pageSize": "10",
-            "creditNoteType": "1",
-            "branchName": "",
-            "sellerTinOrNin": "",
-            "sellerLegalOrBusinessName": ""
-            }
+        "referenceNo": custom_reference_number,
+        "oriInvoiceNo": custom_fdn,
+        "invoiceNo": "",
+        "combineKeywords": "",
+        "approveStatus": "101,102",
+        "queryType": "1",
+        "invoiceApplyCategoryCode": "101,103",
+        "startDate": "",
+        "endDate": "",
+        "pageNo": "1",
+        "pageSize": "10",
+        "creditNoteType": "1",
+        "branchName": "",
+        "sellerTinOrNin": "",
+        "sellerLegalOrBusinessName": ""
+    }
+    
     json_string = json.dumps(data_to_post)
     encoded_data = base64.b64encode(json_string.encode("utf-8")).decode("utf-8")
 
@@ -123,21 +124,24 @@ def query_credit_note(custom_reference_number=None, custom_fdn=None):
             if content:
                 decoded_bytes = base64.b64decode(content)
                 decoded_string = decoded_bytes.decode('utf-8')
+                decoded_data = json.loads(decoded_string)
+                
+                # Print values for debugging
+                print(f"Decoded Data: {decoded_data}")  # Print the entire decoded data
                 try:
-                    decoded_data = json.loads(decoded_string)
-                    log_integration_request('Completed', server_url, headers, data, response_data)
-                    # Make sure 'invoiceNo' exists in the decoded data
-                    if "records" in decoded_data and "invoiceNo" in decoded_data["records"]:
-                        return {
-                            "status": "success",
-                            "credit_note_no": decoded_data["records"]["invoiceNo"]
-                        }
-                    else:
-                        log_integration_request('Failed', server_url, headers, data, response_data, "Missing 'invoiceNo' in response")
-                        return {"status": "failed", "message": "'invoiceNo' not found in response"}
-                except json.JSONDecodeError as e:
-                    log_integration_request('Failed', server_url, headers, data, response_data, f"JSON decoding error: {str(e)}")
-                    return {"status": "failed", "message": "Error decoding JSON response"}
+                    credit_note_no = decoded_data["records"][0].get("invoiceNo", "N/A")
+                    credit_note_id = decoded_data["records"][0].get("id", "N/A")
+                    print(f"Credit Note Number: {credit_note_no}")  # Print specific values
+                    print(f"Credit Note ID: {credit_note_id}")
+                except KeyError as e:
+                    print(f"KeyError: Missing expected field in response - {str(e)}")
+
+                log_integration_request('Completed', server_url, headers, data, response_data)
+                return {
+                    "status": "success",
+                    "credit_note_no": credit_note_no,
+                    "id": credit_note_id
+                }
             else:
                 log_integration_request('Failed', server_url, headers, data, response_data, "Missing content")
                 return {"status": "failed", "message": "Missing content in API response"}
