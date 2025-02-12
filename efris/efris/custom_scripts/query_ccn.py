@@ -142,6 +142,7 @@ def query_credit_note(custom_reference_number=None, custom_fdn=None):
                     "credit_note_no": credit_note_no,
                     "id": credit_note_id
                 }
+                
             else:
                 log_integration_request('Failed', server_url, headers, data, response_data, "Missing content")
                 return {"status": "failed", "message": "Missing content in API response"}

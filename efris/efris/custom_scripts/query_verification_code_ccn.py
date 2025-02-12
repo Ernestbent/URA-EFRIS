@@ -36,7 +36,7 @@ def log_integration_request(status, url, headers, data, response, error=""):
         frappe.throw(f"Error logging integration request: {str(e)}")
 
 @frappe.whitelist()
-def query_verification_code_cn(custom_credit_note_number=None):
+def query_verification_code_cn(credit_note_number=None):
     
     company = frappe.defaults.get_user_default("company")
     if not company:
@@ -54,13 +54,14 @@ def query_verification_code_cn(custom_credit_note_number=None):
     server_url = efris_settings_doc.custom_server_url
 
     current_time = datetime.now(eat_timezone).strftime("%Y-%m-%d %H:%M:%S")
-
+    print(credit_note_number)
     data_to_post = {
-        "invoiceNo": custom_credit_note_number,
+        "invoiceNo": credit_note_number,
     }
     
     json_string = json.dumps(data_to_post)
     encoded_data = base64.b64encode(json_string.encode("utf-8")).decode("utf-8")
+    print(encoded_data)
 
     data = {
         "data": {
@@ -103,7 +104,7 @@ def query_verification_code_cn(custom_credit_note_number=None):
         return_message = response_data["returnStateInfo"].get("returnMessage", "Unknown error")
         
         if response.status_code == 200 and return_message == "SUCCESS":
-            content = response_data["data"].get("content", "")
+            content = response_data.get("data", {}).get("content", "")
             if content:
                 decoded_bytes = base64.b64decode(content)
                 decoded_string = decoded_bytes.decode('utf-8')
@@ -112,7 +113,7 @@ def query_verification_code_cn(custom_credit_note_number=None):
                 # Print values for debugging
                 print(f"Decoded Data: {decoded_data}")  # Print the entire decoded data
                 try:
-                    verification_code = decoded_data["records"][0].get("antifakeCode", "N/A")
+                    verification_code = decoded_data.get("basicInformation", {}).get("antifakeCode")
                     print(f"Verification Code: {verification_code}")
                 except KeyError as e:
                     print(f"KeyError: Missing expected field in response - {str(e)}")

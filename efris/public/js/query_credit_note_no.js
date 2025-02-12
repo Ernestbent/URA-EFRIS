@@ -70,7 +70,7 @@ function get_verification_code_for_cn(frm) {
                 let data = response.message;
 
                 if (data.verification_code) {
-                    frm.set_value("custom_verification_code", data.verification_code || "");  
+                    frm.set_value("custom_verification_codecn", data.verification_code || "");  
 
                     frappe.msgprint(__('Verification Code retrieved successfully.'));
                     frm.refresh(); 
