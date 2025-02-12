@@ -59,10 +59,10 @@ def on_cancel(doc, event):
 
     # Sample cancellation_data dictionary
     cancellation_data = {
-        "oriInvoiceId": doc.custom_fdn,  # Replace with actual invoice ID
+        "oriInvoiceId": doc.custom_invoice_number,  # Replace with actual invoice ID
         "invoiceNo": doc.custom_credit_note_number,     # Replace with actual invoice number
         "reason": "",  # Provide the reason if applicable
-        "reasonCode": "102",
+        "reasonCode": "101",
         "invoiceApplyCategoryCode": "104",
         "attachmentList": [
             {
