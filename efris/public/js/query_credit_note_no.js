@@ -2,7 +2,7 @@ frappe.ui.form.on('Sales Invoice', {
     refresh: function(frm) {
         // Check if the document is in Return status
         if (frm.doc.docstatus === 1 && frm.doc.is_return) {  
-            frm.add_custom_button(__('Query Credit Note Number'), function() {
+            frm.add_custom_button(__('Query Credit Note Details(CN and id)'), function() {
                 get_credit_note_number(frm);
             }, __("Credit Note Actions"));
 
