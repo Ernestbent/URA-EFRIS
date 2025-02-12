@@ -28,6 +28,7 @@ function get_credit_note_number(frm) {
         args: {
             custom_reference_number: frm.doc.custom_reference_number,  
             custom_fdn: frm.doc.custom_fdn  
+
         },
         callback: function(response) {
             if (response.message && response.message.status === "success") {
@@ -36,7 +37,7 @@ function get_credit_note_number(frm) {
                 if (data.credit_note_no || data.credit_note_id) {
                     frm.set_value("custom_credit_note_number", data.credit_note_no || "");  
                     frm.set_value("custom_id", data.id || "");  
-
+                    
                     frappe.msgprint(__('Success'));
                     frm.refresh(); 
                 } else {
