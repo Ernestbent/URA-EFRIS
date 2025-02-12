@@ -59,8 +59,8 @@ def on_cancel(doc, event):
 
     # Sample cancellation_data dictionary
     cancellation_data = {
-        "oriInvoiceId": doc.custom_invoice_number,  # Replace with actual invoice ID
-        "invoiceNo": doc.custom_fdn,     # Replace with actual invoice number
+        "oriInvoiceId": doc.custom_fdn,  # Replace with actual invoice ID
+        "invoiceNo": doc.custom_credit_note_number,     # Replace with actual invoice number
         "reason": "",  # Provide the reason if applicable
         "reasonCode": "102",
         "invoiceApplyCategoryCode": "104",
@@ -171,17 +171,3 @@ def on_cancel(doc, event):
         frappe.throw(f"Request failed: {e}")
         doc.docstatus = 0
         
-
-    # except json.JSONDecodeError as e:
-    #     # Handle JSON decoding errors
-    #     log_integration_request('Failed', api_url, headers, data_to_post, {}, f"JSON decode error: {e}")
-    #     frappe.throw(f"JSON decode error: {e}")
-    #     doc.docstatus = 0
-    #     doc.save()
-    # except base64.binascii.Error as e:
-    #     # Handle base64 decoding errors
-    #     log_integration_request('Failed', api_url, headers, data_to_post, {}, f"Base64 decode error: {e}")
-    #     frappe.throw(f"Base64 decode error: {e}")
-    #     # Set the document status to 'Draft'
-    #     doc.docstatus = 0  # 0 represents 'Draft' status
-    #     doc.save()
