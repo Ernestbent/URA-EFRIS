@@ -9,9 +9,9 @@ frappe.ui.form.on('Sales Invoice', {
             frm.add_custom_button(__('Get Verification Code for CN'), function() {
                 get_verification_code_for_cn(frm);
             }, __("Credit Note Actions"));
-            frm.add_custom_button(__('Cancel Credit Note Awaiting Approval'), function() {
-                cancel_credit_note_awaiting_approval(frm);
-            }, __("Credit Note Actions"));
+            // frm.add_custom_button(__('Cancel Credit Note Awaiting Approval'), function() {
+            //     cancel_credit_note_awaiting_approval(frm);
+            // }, __("Credit Note Actions"));
         }
     }
 });
@@ -38,7 +38,7 @@ function get_credit_note_number(frm) {
                     frm.set_value("custom_credit_note_number", data.credit_note_no || "");  
                     frm.set_value("custom_id", data.id || "");  
                     
-                    frappe.msgprint(__('Success'));
+                    frappe.msgprint(__('Success')); 
                     frm.refresh(); 
                 } else {
                     frappe.msgprint(__('Credit Note Number or ID missing in the response.'));
