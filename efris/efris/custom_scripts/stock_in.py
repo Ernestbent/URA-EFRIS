@@ -51,6 +51,16 @@ def on_stock(doc, event):
             "custom_uom_code": item.custom_uom_code,
         }
         items_data.append(item_data)
+        stock_in_type_mapping = {
+            "Import": "101",
+            "Local Purchase": "102",
+            "Manufacturing/Assembling": "103",
+            "Opening Stock": "104",
+        }
+
+        # Fetch the selected type from the ERPNext field
+        selected_type = doc.custom_stock_in_type  # Assuming 'custom_stock_in_type' is a field in the ERPNext document
+        stock_in_type = stock_in_type_mapping.get(selected_type, "")
 
         goods_stock_in_item = {
             "commodityGoodsId": "",
@@ -65,6 +75,7 @@ def on_stock(doc, event):
         }
         goods_stock_in_items.append(goods_stock_in_item)
 
+
     data = {
         "goodsStockIn": {
             "operationType": "101",
@@ -73,7 +84,7 @@ def on_stock(doc, event):
             "adjustType": "",
             "remarks": "Increase Inventory",
             "stockInDate": doc.posting_date,
-            "stockInType": "101",
+            "stockInType": stock_in_type,
             "productionBatchNo": "",
             "productionDate": "",
             "branchId": "",
