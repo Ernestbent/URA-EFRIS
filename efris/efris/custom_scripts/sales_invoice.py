@@ -294,7 +294,7 @@ def on_send(doc, event):
                 "buyerTin": doc.tax_id,
                 "buyerNinBrn": doc.custom_ninbrn,
                 "buyerPassportNum": doc.custom_passport_number,
-                "buyerLegalName":"",
+                "buyerLegalName":doc.customer_name,
                 "buyerBusinessName": doc.customer_name,
                 "buyerAddress": doc.custom_address,
                 "buyerEmail": doc.custom_email_address,
