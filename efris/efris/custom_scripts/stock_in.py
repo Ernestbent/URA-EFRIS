@@ -88,7 +88,7 @@ def on_stock(doc, event):
             "productionBatchNo": "",
             "productionDate": "",
             "branchId": "",
-            "invoiceNo": "",
+            "invoiceNo": doc.bill_no,
             "isCheckBatchNo": "0",
             "rollBackIfError": "0",
             "goodsTypeCode": "101",
