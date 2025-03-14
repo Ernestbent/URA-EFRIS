@@ -295,7 +295,7 @@ def on_send(doc, event):
                 "buyerNinBrn": doc.custom_ninbrn,
                 "buyerPassportNum": doc.custom_passport_number,
                 "buyerLegalName":"",
-                "buyerBusinessName": "",
+                "buyerBusinessName": doc.customer_name,
                 "buyerAddress": doc.custom_address,
                 "buyerEmail": doc.custom_email_address,
                 "buyerMobilePhone": doc.custom_mobile_no,
