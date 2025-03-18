@@ -114,6 +114,9 @@ def query_verification_code_cn(credit_note_number=None):
                 print(f"Decoded Data: {decoded_data}")  # Print the entire decoded data
                 try:
                     verification_code = decoded_data.get("basicInformation", {}).get("antifakeCode")
+                    qr_code_efris = decoded_data.get("summary", {}).get("qrCode")
+
+                    print(qr_code_efris)
                     print(f"Verification Code: {verification_code}")
                 except KeyError as e:
                     print(f"KeyError: Missing expected field in response - {str(e)}")
@@ -121,7 +124,8 @@ def query_verification_code_cn(credit_note_number=None):
                 log_integration_request('Completed', server_url, headers, data, response_data)
                 return {
                     "status": "success",
-                    "verification_code": verification_code
+                    "verification_code": verification_code,
+                    "qr_code_efris":qr_code_efris
                 }
             else:
                 log_integration_request('Failed', server_url, headers, data, response_data, "Missing content")

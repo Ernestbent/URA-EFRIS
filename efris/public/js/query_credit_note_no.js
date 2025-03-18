@@ -70,8 +70,9 @@ function get_verification_code_for_cn(frm) {
             if (response.message && response.message.status === "success") {
                 let data = response.message;
 
-                if (data.verification_code) {
+                if (data.verification_code || data.qr_code_efris) {
                     frm.set_value("custom_verification_codecn", data.verification_code || "");  
+                    frm.set_value("custom_qr_code_credit_note_", data.qr_code_efris || "");  
 
                     frappe.msgprint(__('Verification Code retrieved successfully.'));
                     frm.refresh(); 
