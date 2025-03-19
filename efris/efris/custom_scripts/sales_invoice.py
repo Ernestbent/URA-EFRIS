@@ -554,7 +554,7 @@ def on_send(doc, event):
                 "buyerMobilePhone": "",
                 "buyerLinePhone": "",
                 "buyerPlaceOfBusi": "",
-                "buyerType": "1",
+                "buyerType": buyer_types,
                 "buyerCitizenship": "",
                 "buyerSector": "1",
                 "buyerReferenceNo": "",
@@ -569,7 +569,7 @@ def on_send(doc, event):
                 "importAttachmentContent": "",
             },
             "basicInformation": {
-                "operator": "TGS-OSILLO CONSULTING",
+                "operator": "Testing Service",
                 "invoiceKind": "1",
                 "invoiceIndustryCode": "",
                 "branchId": "",
