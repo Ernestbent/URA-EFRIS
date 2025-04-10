@@ -140,7 +140,7 @@ def query_credit_note(custom_reference_number=None, custom_fdn=None):
                 return {
                     "status": "success",
                     "credit_note_no": credit_note_no,
-                    "id": credit_note_id,
+                    "id": credit_note_id, 
                 }
                 
             else:

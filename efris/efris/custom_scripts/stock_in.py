@@ -77,7 +77,7 @@ def on_stock(doc, event):
 
 
     data = {
-        "goodsStockIn": {
+        "goodsStockIn": { 
             "operationType": "101",
             "supplierTin": doc.tax_id,
             "supplierName": doc.supplier_name,
