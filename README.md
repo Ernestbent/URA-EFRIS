@@ -52,4 +52,4 @@ Before installation, ensure you have:
 
 ```bash
 cd ~/frappe-bench
-bench get-app efris_integration https://github.com/Ernestbent/URA-EFRIS.git
+bench get-app efris https://github.com/Ernestbent/URA-EFRIS.git
