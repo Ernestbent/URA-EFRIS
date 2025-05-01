@@ -182,11 +182,4 @@ To stock in items in ERPNext via a **Purchase Invoice**, you need to specify the
     - **Import**: Goods purchased from international suppliers.
     - **Manufacturing/Assembling**: Items related to manufacturing or assembly processes.
 
-### Important Notes:
-- To stock in items properly, ensure that the correct **Purchase Type** is selected based on your purchase source.
-- For **Import** purchases, you may need to manually include additional costs, such as customs duties.
-- Depending on the **Purchase Type**, different inventory settings may be required for smooth processing.
-
-
-
 Made with ❤️ by Ernest Ben
