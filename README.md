@@ -53,3 +53,9 @@ Before installation, ensure you have:
 ```bash
 cd ~/frappe-bench
 bench get-app efris https://github.com/Ernestbent/URA-EFRIS.git
+
+### Step 2: Install the App on Your Site
+```bash
+bench --site your-site-name install-app efris
+
+
