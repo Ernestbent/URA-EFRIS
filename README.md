@@ -150,6 +150,26 @@ The **EFRIS Settings** Doctype is used to configure and manage the connection be
 ---
 
 🛠️ **Note**: Ensure all fields are filled accurately to avoid API authentication failures or submission errors. In sandbox mode, dummy values can be used for testing, while production requires valid URA-issued credentials.
+## 🧾 Item Registration
+
+This section is used to configure items (goods or services) for EFRIS submission. Key fields include:
+![Item Configuration](assets/Item%20Configuration.png)
+
+- **Company**: Link the item to a specific company.
+- **Add Product (Goods/Services)**: Reference an existing product registered in EFRIS.
+- **Excise Tax**: Checkbox for whether the item is subject to excise tax.
+- **Goods Category ID**: EFRIS code for the item.
+- **Item Name & Code**: Name and code of the commodity.
+- **Item Group**: Classification/grouping of the item.
+- **Unit of Measure (UOM)** & **UOM Code (EFRIS)**: Defines quantity unit and its corresponding EFRIS code.
+- **EFRIS Item**: Checkbox to indicate if the item should be synced with EFRIS.
+- **Register/Modify Item**: Set to `101` to register, `102` to modify.
+- **Stock, Variants, Pricing Fields**: Includes stock tracking, valuation, and pricing configuration.
+
+
+
+
+
 
 
 
