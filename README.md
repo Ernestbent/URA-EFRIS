@@ -107,21 +107,6 @@ For support, bug reports, or feature requests, please:
 - Open an issue on [GitHub](https://github.com/Ernestbent/URA-EFRIS/issues)
 - Contact the maintainer at [benedict@phenomadvisory.com](mailto:benedict@phenom.com)
 
-bash# Check EFRIS API connection status
-bench --site site1.local execute efris_integration.utils.check_connection
-
-# Manually sync pending invoices with URA
-bench --site site1.local execute efris_integration.api.sync_pending_invoices
-
-# Verify an invoice submission status by invoice name
-bench --site site1.local execute efris_integration.api.check_invoice_status --args '["INV-001"]'
-
-# Reset integration status for troubleshooting
-bench --site site1.local execute efris_integration.utils.reset_integration_status --args '["SINV-00001"]'
-
-# Generate a diagnostic report
-bench --site site1.local execute efris_integration.utils.generate_diagnostic_report
-
 ## 🔧 EFRIS Settings
 
 The **EFRIS Settings** Doctype is used to configure and manage the connection between your ERPNext instance and the URA EFRIS system. These settings include environment toggles, credentials, server endpoints, and company-specific configuration needed for proper communication with the URA platform.
