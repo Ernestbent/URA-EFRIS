@@ -107,6 +107,62 @@ For support, bug reports, or feature requests, please:
 - Open an issue on [GitHub](https://github.com/Ernestbent/URA-EFRIS/issues)
 - Contact the maintainer at [benedict@phenomadvisory.com](mailto:benedict@phenom.com)
 
+bash# Check EFRIS API connection status
+bench --site site1.local execute efris_integration.utils.check_connection
+
+# Manually sync pending invoices with URA
+bench --site site1.local execute efris_integration.api.sync_pending_invoices
+
+# Verify an invoice submission status by invoice name
+bench --site site1.local execute efris_integration.api.check_invoice_status --args '["INV-001"]'
+
+# Reset integration status for troubleshooting
+bench --site site1.local execute efris_integration.utils.reset_integration_status --args '["SINV-00001"]'
+
+# Generate a diagnostic report
+bench --site site1.local execute efris_integration.utils.generate_diagnostic_report
+
+## 🔧 EFRIS Settings
+
+The **EFRIS Settings** Doctype is used to configure and manage the connection between your ERPNext instance and the URA EFRIS system. These settings include environment toggles, credentials, server endpoints, and company-specific configuration needed for proper communication with the URA platform.
+
+### 📝 Configuration Fields
+
+| Field Label             | Fieldname               | Description                                                                 |
+|-------------------------|-------------------------|-----------------------------------------------------------------------------|
+| **Details**             |                         | General information and instructions.                                       |
+| **Submission Frequency**|                         | How often data should be submitted to EFRIS.                                |
+| **Environment**         |                         | Specify whether the integration is in sandbox or production mode.           |
+| **Sandbox**             | `custom_sandbox`        | Marks the environment as either sandbox (test) or production.               |
+| **Is Active**           | `custom_is_active`      | Enables or disables the integration.                                        |
+
+### 🌐 Settings Definition
+
+| Field Label             | Fieldname               | Description                                                                 |
+|-------------------------|-------------------------|-----------------------------------------------------------------------------|
+| **Server URL**          | `custom_server_url`     | EFRIS Offline Enabler URL. Leave blank unless instructed otherwise.         |
+| **Device Number**       | `custom_device_number`  | EFRIS Offline Enabler Device Number (e.g., TCSxxxxxxx).                     |
+
+### 🏢 Company Settings
+
+| Field Label             | Fieldname               | Description                                                                 |
+|-------------------------|-------------------------|-----------------------------------------------------------------------------|
+| **Legal Name**          | `custom_legal_name`     | Registered legal name of the company.                                       |
+| **Company**             | `custom_company`        | Link to the company in ERPNext (e.g., TARGET LINK UGANDA LIMITED).          |
+| **Branch ID**           | `custom_branch_id`      | Branch ID issued by URA.                                                    |
+| **Line Phone**          | `custom_line_phone`     | Company landline number.                                                    |
+| **Email Address**       | `custom_email_address`  | Email linked with the company’s URA account.                                |
+| **Tax Payer's TIN**     | `custom_tax_payers_tin` | Company’s URA Taxpayer Identification Number (TIN).                         |
+| **Business Name**       | `custom_business_name`  | Registered business name as per URA records.                                |
+| **BRN**                 | `custom_brn`            | Business Registration Number.                                               |
+| **Mobile Phone**        | `custom_mobile_phone`   | Primary contact mobile number.                                              |
+| **Address**             | `custom_address`        | Registered physical address of the company.                                 |
+| **Place of Business**   |                         | Location of the business as declared to URA.                                |
+
 ---
+
+🛠️ **Note**: Ensure all fields are filled accurately to avoid API authentication failures or submission errors. In sandbox mode, dummy values can be used for testing, while production requires valid URA-issued credentials.
+
+
 
 Made with ❤️ by Ernest Ben
