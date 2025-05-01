@@ -112,6 +112,8 @@ For support, bug reports, or feature requests, please:
 The **EFRIS Settings** Doctype is used to configure and manage the connection between your ERPNext instance and the URA EFRIS system. These settings include environment toggles, credentials, server endpoints, and company-specific configuration needed for proper communication with the URA platform.
 
 ### 📝 Configuration Fields
+![EFIRS Settings Screenshot](assets/EFRIS Settings.png)
+
 
 | Field Label             | Fieldname               | Description                                                                 |
 |-------------------------|-------------------------|-----------------------------------------------------------------------------|
