@@ -208,8 +208,39 @@ Stock adjustments are made when there is a need to issue materials or make chang
 - You can also track adjustments made to stock for auditing purposes by referencing the reason behind each adjustment.
 - **Material Issue** is linked to stock levels, so any changes here will directly affect your inventory.
 
+## 🧑‍🤝‍🧑 Customer Creation
 
+The customer creation process in ERPNext involves retrieving customer information, especially for clients who have a **Taxpayer Identification Number (TIN)**. This is done by first checking the **URA (Uganda Revenue Authority)** database to verify and retrieve the relevant details before creating the customer record in the system.
 
+![Customer Creation](assets/Customer%20Creation.png)
+
+### Key Steps:
+
+1. **Retrieve Taxpayer Information from URA**:
+   - Before creating a new customer, the system checks the **URA** database for the provided **TIN number**. If the customer has an existing TIN registered with URA, their details (like legal name, company, and tax status) are retrieved automatically.
+
+2. **Enter TIN Number**:
+   - When creating the customer, enter the **TIN number** to retrieve data from the URA database. If the TIN is valid, the relevant customer information will be pulled from URA.
+
+3. **Pre-populate Customer Fields**:
+   - Once the TIN is validated, the customer form will be pre-populated with data retrieved from the URA database. This includes fields like:
+     - **Legal Name**
+     - **Company**
+     - **Email Address**
+     - **Phone Number**
+     - **Taxpayer's TIN**
+     - **Business Name**
+     - **Company Address**
+     - **Other required details**
+   
+4. **Save Customer Record**:
+   - After verifying and filling in any necessary missing fields, save the customer record in ERPNext.
+
+### Important Notes:
+
+- **TIN Verification**: Ensure that the TIN is valid before creating a customer. This prevents the creation of invalid customer records.
+- **Data Accuracy**: Make sure the data retrieved from URA is up-to-date and accurate. If there are discrepancies, manual updates might be required.
+- **Customer Group**: Group customers based on certain criteria (e.g., **B2B**, **Government**, **B2C**, etc.) for easy management.
 
 
 Made with ❤️ by Ernest Ben
