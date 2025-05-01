@@ -46,21 +46,17 @@ Before installation, ensure you have:
 - A working Frappe/ERPNext setup (v13 or later)
 - A created site (e.g., `site1.local`)
 - Bench CLI access
-- Your URA EFRIS credentials 
+- Your URA EFRIS credentials
+
+---
 
 ### Step 1: Clone the App
+
+Clone the custom app into your bench directory by running the following command:
 
 ```bash
 cd ~/frappe-bench
 bench get-app efris https://github.com/Ernestbent/URA-EFRIS.git
-
-### Step 2: Install the App on Your Site
-
-Once the app is cloned, run the following command to install it on your specific ERPNext site:
-
-```bash
-bench --site your-site-name install-app efris
-
 
 
 
