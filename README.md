@@ -54,6 +54,13 @@ Before installation, ensure you have:
 cd ~/frappe-bench
 bench get-app efris https://github.com/Ernestbent/URA-EFRIS.git
 
+### Step 1: Clone the App
+
+```bash
+cd ~/frappe-bench
+bench get-app efris https://github.com/Ernestbent/URA-EFRIS.git
+
+
 
 
 
