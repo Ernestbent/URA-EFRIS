@@ -88,3 +88,6 @@ pip install --user <package_name>
 ```
 
 For system-level packages that require permissions, use sudo with caution.
+```bash
+cd ~/frappe-bench
+bench get-app efris_integration https://github.com/Ernestbent/URA-EFRIS.git
