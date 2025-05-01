@@ -105,7 +105,7 @@ This application is licensed under the [MIT License](LICENSE).
 
 For support, bug reports, or feature requests, please:
 - Open an issue on [GitHub](https://github.com/Ernestbent/URA-EFRIS/issues)
-- Contact the maintainer at [ernest@example.com](mailto:ernest@example.com)
+- Contact the maintainer at [benedict@phenomadvisory.com](mailto:benedict@phenom.com)
 
 ---
 
