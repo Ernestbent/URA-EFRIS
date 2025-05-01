@@ -185,6 +185,7 @@ To stock in items in ERPNext via a **Purchase Invoice**, you need to specify the
 ## 🛠️ Stock Adjustment
 
 Stock adjustments are made when there is a need to issue materials or make changes to the stock levels. In ERPNext, this can be done through a **Stock Entry** with the adjustment reason specified.
+![Stock Adjustment](assets/Stock%20Adjustment.png)
 
 ### Key Steps:
 
@@ -206,9 +207,8 @@ Stock adjustments are made when there is a need to issue materials or make chang
 - You can also track adjustments made to stock for auditing purposes by referencing the reason behind each adjustment.
 - **Material Issue** is linked to stock levels, so any changes here will directly affect your inventory.
 
-### 📷 Screenshot
 
-![Stock Adjustment](assets/Stock%20Adjustments.png)
+
 
 
 Made with ❤️ by Ernest Ben
