@@ -33,9 +33,7 @@ Here’s how the integration works:
    - Items created in ERPNext can be pushed to EFRIS via a button or automatic trigger.
    - Details such as name, unit, price, and category are sent to URA’s `/goods/register` or `/goods/update` endpoints.
 
-4. **Security and Tokens**
-   - EFRIS credentials (Client ID, Secret, TIN) are configured securely in the app.
-   - The app manages session tokens automatically and includes them in all requests.
+
 
 ---
 
