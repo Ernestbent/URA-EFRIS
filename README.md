@@ -212,7 +212,7 @@ Stock adjustments are made when there is a need to issue materials or make chang
 
 The customer creation process in ERPNext involves retrieving customer information, especially for clients who have a **Taxpayer Identification Number (TIN)**. This is done by first checking the **URA (Uganda Revenue Authority)** database to verify and retrieve the relevant details before creating the customer record in the system.
 
-![Customer Creation](assets/Customer%20Creation.png)
+![Customer Form](assets/Customer%20Info.png)
 
 ### Key Steps:
 
