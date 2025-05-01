@@ -181,5 +181,34 @@ To stock in items in ERPNext via a **Purchase Invoice**, you need to specify the
     - **Local Purchase**: Goods purchased locally.
     - **Import**: Goods purchased from international suppliers.
     - **Manufacturing/Assembling**: Items related to manufacturing or assembly processes.
+ 
+## 🛠️ Stock Adjustment
+
+Stock adjustments are made when there is a need to issue materials or make changes to the stock levels. In ERPNext, this can be done through a **Stock Entry** with the adjustment reason specified.
+
+### Key Steps:
+
+1. **Create a Stock Entry**: This is done under the **Stock Entry** document where you can adjust stock quantities for various items.
+2. **Select the Material Issue Type**: Choose the **Material Issue** option to issue the stock out of the warehouse.
+3. **Enter the Adjusted Quantity**: Specify the quantity that needs to be adjusted (either positive or negative).
+4. **Stock Adjustment Reason**: Choose the reason for the stock adjustment from the list of predefined reasons.
+
+### Stock Adjustment Reasons:
+
+- **Expired Goods**: Adjust stock when goods reach their expiry date and are no longer usable.
+- **Damaged Goods**: Use this reason when goods are damaged during handling, storage, or shipping.
+- **Personal Issues**: Sometimes, stock adjustments are made due to personal reasons like misplacement, theft, or personal usage.
+- **Raw Materials**: Adjustments related to raw materials that might not be usable for production.
+
+### Important Notes:
+
+- Ensure that the **Stock Adjustment Reason** is selected properly for accurate inventory management.
+- You can also track adjustments made to stock for auditing purposes by referencing the reason behind each adjustment.
+- **Material Issue** is linked to stock levels, so any changes here will directly affect your inventory.
+
+### 📷 Screenshot
+
+![Stock Adjustment](assets/Stock%20Adjustments.png)
+
 
 Made with ❤️ by Ernest Ben
