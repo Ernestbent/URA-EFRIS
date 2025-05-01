@@ -171,6 +171,7 @@ This section is used to configure items (goods or services) for EFRIS submission
 To stock in items in ERPNext via a **Purchase Invoice**, you need to specify the type of purchase based on whether it’s a **Local Purchase**, **Import**, or **Manufacturing/Assembling**. The distinction is crucial for proper stock management.
 
 ### Key Fields:
+![Purchase Invoice Configuration](assets/Stock%20In.png)
 
 - **Company**: Link the invoice to the specific company.
 - **Supplier**: Select the vendor from whom you are purchasing the goods.
@@ -186,6 +187,6 @@ To stock in items in ERPNext via a **Purchase Invoice**, you need to specify the
 - For **Import** purchases, you may need to manually include additional costs, such as customs duties.
 - Depending on the **Purchase Type**, different inventory settings may be required for smooth processing.
 
-![Purchase Invoice Configuration](assets/Purchase%20Invoice%20Configuration.png)
+
 
 Made with ❤️ by Ernest Ben
