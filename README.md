@@ -54,14 +54,7 @@ Before installation, ensure you have:
 cd ~/frappe-bench
 bench get-app efris https://github.com/Ernestbent/URA-EFRIS.git
 
-### Prerequisites
-
-Before installation, ensure you have:
-
-- A working Frappe/ERPNext setup (v13 or later)
-- A created site (e.g., `site1.local`)
-- Bench CLI access
-- Your URA EFRIS credentials 
+**### Step 2: Clone APP**
 
 
 
