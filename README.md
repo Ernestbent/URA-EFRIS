@@ -109,4 +109,4 @@ For support, bug reports, or feature requests, please:
 
 ---
 
-Made with ❤️ by Ernest Bent
+Made with ❤️ by Ernest Ben
