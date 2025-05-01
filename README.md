@@ -44,12 +44,12 @@ Before installation, ensure you have:
 ### Step 1: Clone the App
 ```bash
 cd ~/frappe-bench
-bench get-app efris_integration https://github.com/Ernestbent/URA-EFRIS.git
+bench get-app https://github.com/Ernestbent/URA-EFRIS.git
 ```
 
 ### Step 2: Install the App
 ```bash
-bench --site site1.local install-app efris_integration
+bench --site site1.local install-app efris
 ```
 
 ### Step 3: Configure EFRIS Credentials
@@ -133,7 +133,7 @@ The **EFRIS Settings** Doctype is used to configure and manage the connection be
 | Field Label             | Fieldname               | Description                                                                 |
 |-------------------------|-------------------------|-----------------------------------------------------------------------------|
 | **Legal Name**          | `custom_legal_name`     | Registered legal name of the company.                                       |
-| **Company**             | `custom_company`        | Link to the company in ERPNext (e.g., TARGET LINK UGANDA LIMITED).          |
+| **Company**             | `custom_company`        | Link to the company in ERPNext (e.g., MY COMPANY).          |
 | **Branch ID**           | `custom_branch_id`      | Branch ID issued by URA.                                                    |
 | **Line Phone**          | `custom_line_phone`     | Company landline number.                                                    |
 | **Email Address**       | `custom_email_address`  | Email linked with the company’s URA account.                                |
