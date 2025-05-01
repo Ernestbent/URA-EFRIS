@@ -166,11 +166,26 @@ This section is used to configure items (goods or services) for EFRIS submission
 - **Register/Modify Item**: Set to `101` to register, `102` to modify.
 - **Stock, Variants, Pricing Fields**: Includes stock tracking, valuation, and pricing configuration.
 
+## 🧾 Purchasing Stock in Purchase Invoice
 
+To stock in items in ERPNext via a **Purchase Invoice**, you need to specify the type of purchase based on whether it’s a **Local Purchase**, **Import**, or **Manufacturing/Assembling**. The distinction is crucial for proper stock management.
 
+### Key Fields:
 
+- **Company**: Link the invoice to the specific company.
+- **Supplier**: Select the vendor from whom you are purchasing the goods.
+- **Item Details**: Ensure to enter the correct items being purchased, along with their quantities and unit prices.
+- **Stock UOM**: The unit of measure for the item being purchased.
+- **Purchase Type**:
+    - **Local Purchase**: Goods purchased locally.
+    - **Import**: Goods purchased from international suppliers.
+    - **Manufacturing/Assembling**: Items related to manufacturing or assembly processes.
 
+### Important Notes:
+- To stock in items properly, ensure that the correct **Purchase Type** is selected based on your purchase source.
+- For **Import** purchases, you may need to manually include additional costs, such as customs duties.
+- Depending on the **Purchase Type**, different inventory settings may be required for smooth processing.
 
-
+![Purchase Invoice Configuration](assets/Purchase%20Invoice%20Configuration.png)
 
 Made with ❤️ by Ernest Ben
