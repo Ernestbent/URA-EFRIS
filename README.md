@@ -46,7 +46,7 @@ Before installation, ensure you have:
 - A working Frappe/ERPNext setup (v13 or later)
 - A created site (e.g., `site1.local`)
 - Bench CLI access
-- Your URA EFRIS credentials (TIN, Client ID, Client Secret)
+- Your URA EFRIS credentials 
 
 ### Step 1: Clone the App
 
